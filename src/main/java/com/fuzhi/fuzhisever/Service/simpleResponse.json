@@ -1,0 +1,818 @@
+{
+  "request_id": "1732178616,3063ceee-daa3-4d4f-85eb-0fe073c509ca",
+  "time_used": 7685,
+  "result": {
+    "skin_age": {
+      "value": 22
+    },
+    "eye_pouch": {
+      "value": 0,
+      "confidence": 0.9313846
+    },
+    "dark_circle": {
+      "value": 2,
+      "confidence": 1
+    },
+    "dark_circle_severity": {
+      "value": 2,
+      "confidence": 1
+    },
+    "forehead_wrinkle": {
+      "value": 0,
+      "confidence": 0.9715696
+    },
+    "crows_feet": {
+      "value": 0,
+      "confidence": 0.9949745
+    },
+    "eye_finelines": {
+      "value": 1,
+      "confidence": 0.7574203
+    },
+    "eye_finelines_severity": {
+      "value": 2,
+      "confidence": 0.56039256
+    },
+    "glabella_wrinkle": {
+      "value": 0,
+      "confidence": 0.9965742
+    },
+    "nasolabial_fold": {
+      "value": 0,
+      "confidence": 0.45050958
+    },
+    "skin_type": {
+      "skin_type": 2,
+      "details": {
+        "0": {
+          "value": 0,
+          "confidence": 0.07453465
+        },
+        "1": {
+          "value": 0,
+          "confidence": 0.0063308547
+        },
+        "2": {
+          "value": 0,
+          "confidence": 0.4838901
+        },
+        "3": {
+          "value": 0,
+          "confidence": 0.43524444
+        }
+      }
+    },
+    "pores_forehead": {
+      "value": 0,
+      "confidence": 1
+    },
+    "pores_left_cheek": {
+      "value": 0,
+      "confidence": 1
+    },
+    "pores_right_cheek": {
+      "value": 0,
+      "confidence": 1
+    },
+    "pores_jaw": {
+      "value": 0,
+      "confidence": 1
+    },
+    "blackhead": {
+      "value": 0,
+      "confidence": 1
+    },
+    "skintone_ita": {
+      "ITA": 61.6956,
+      "skintone": 0
+    },
+    "skin_hue_ha": {
+      "HA": 43.432507,
+      "skin_hue": 2
+    },
+    "acne": {
+      "rectangle": [
+        {
+          "left": 286,
+          "top": 134,
+          "width": 8,
+          "height": 7
+        },
+        {
+          "left": 329,
+          "top": 186,
+          "width": 5,
+          "height": 6
+        },
+        {
+          "left": 395,
+          "top": 182,
+          "width": 5,
+          "height": 7
+        },
+        {
+          "left": 332,
+          "top": 138,
+          "width": 6,
+          "height": 6
+        },
+        {
+          "left": 342,
+          "top": 272,
+          "width": 6,
+          "height": 5
+        },
+        {
+          "left": 309,
+          "top": 121,
+          "width": 5,
+          "height": 6
+        },
+        {
+          "left": 314,
+          "top": 192,
+          "width": 4,
+          "height": 5
+        }
+      ],
+      "confidence": [
+        0.48692074,
+        0.48493806,
+        0.41231322,
+        0.40581706,
+        0.36455956,
+        0.3506108,
+        0.3086895
+      ],
+      "polygon": [
+        [
+          {
+            "x": 290,
+            "y": 134
+          },
+          {
+            "x": 292,
+            "y": 137
+          },
+          {
+            "x": 289,
+            "y": 140
+          }
+        ],
+        [
+          {
+            "x": 333,
+            "y": 189
+          },
+          {
+            "x": 329,
+            "y": 190
+          },
+          {
+            "x": 331,
+            "y": 187
+          }
+        ],
+        [
+          {
+            "x": 399,
+            "y": 187
+          },
+          {
+            "x": 395,
+            "y": 185
+          },
+          {
+            "x": 398,
+            "y": 184
+          }
+        ],
+        [
+          {
+            "x": 336,
+            "y": 143
+          },
+          {
+            "x": 332,
+            "y": 141
+          },
+          {
+            "x": 335,
+            "y": 140
+          }
+        ],
+        [
+          {
+            "x": 346,
+            "y": 276
+          },
+          {
+            "x": 344,
+            "y": 272
+          },
+          {
+            "x": 347,
+            "y": 273
+          }
+        ],
+        [
+          {
+            "x": 313,
+            "y": 126
+          },
+          {
+            "x": 309,
+            "y": 126
+          },
+          {
+            "x": 310,
+            "y": 122
+          }
+        ],
+        [
+          {
+            "x": 317,
+            "y": 195
+          },
+          {
+            "x": 314,
+            "y": 193
+          },
+          {
+            "x": 317,
+            "y": 192
+          }
+        ]
+      ],
+      "count": 7
+    },
+    "mole": {
+      "rectangle": [
+        {
+          "left": 307,
+          "top": 268,
+          "width": 4,
+          "height": 4
+        },
+        {
+          "left": 373,
+          "top": 337,
+          "width": 4,
+          "height": 5
+        }
+      ],
+      "confidence": [
+        0.49683475,
+        0.43055138
+      ],
+      "polygon": [
+        [],
+        []
+      ],
+      "count": 2
+    },
+    "brown_spot": {
+      "rectangle": [
+        {
+          "left": 353,
+          "top": 312,
+          "width": 3,
+          "height": 3
+        },
+        {
+          "left": 372,
+          "top": 327,
+          "width": 3,
+          "height": 4
+        },
+        {
+          "left": 340,
+          "top": 379,
+          "width": 3,
+          "height": 4
+        },
+        {
+          "left": 351,
+          "top": 328,
+          "width": 4,
+          "height": 3
+        },
+        {
+          "left": 328,
+          "top": 317,
+          "width": 3,
+          "height": 3
+        },
+        {
+          "left": 340,
+          "top": 286,
+          "width": 4,
+          "height": 4
+        },
+        {
+          "left": 301,
+          "top": 267,
+          "width": 3,
+          "height": 4
+        },
+        {
+          "left": 361,
+          "top": 325,
+          "width": 3,
+          "height": 3
+        },
+        {
+          "left": 347,
+          "top": 337,
+          "width": 4,
+          "height": 4
+        },
+        {
+          "left": 332,
+          "top": 336,
+          "width": 4,
+          "height": 4
+        },
+        {
+          "left": 354,
+          "top": 297,
+          "width": 3,
+          "height": 4
+        },
+        {
+          "left": 288,
+          "top": 168,
+          "width": 4,
+          "height": 4
+        },
+        {
+          "left": 336,
+          "top": 380,
+          "width": 4,
+          "height": 4
+        }
+      ],
+      "confidence": [
+        0.60573554,
+        0.544126,
+        0.5440198,
+        0.51019585,
+        0.5079345,
+        0.48684394,
+        0.47497025,
+        0.4526685,
+        0.42813423,
+        0.38779625,
+        0.33335355,
+        0.32007182,
+        0.3035619
+      ],
+      "polygon": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "count": 13
+    },
+    "closed_comedones": {
+      "rectangle": [],
+      "confidence": [],
+      "polygon": [],
+      "count": 0
+    },
+    "acne_mark": {
+      "rectangle": [
+        {
+          "left": 298,
+          "top": 226,
+          "width": 6,
+          "height": 7
+        },
+        {
+          "left": 334,
+          "top": 147,
+          "width": 4,
+          "height": 5
+        }
+      ],
+      "confidence": [
+        0.415945,
+        0.3811096
+      ],
+      "polygon": [
+        [
+          {
+            "x": 303,
+            "y": 231
+          },
+          {
+            "x": 300,
+            "y": 232
+          },
+          {
+            "x": 299,
+            "y": 229
+          },
+          {
+            "x": 302,
+            "y": 228
+          }
+        ],
+        []
+      ],
+      "count": 2
+    },
+    "acne_nodule": {
+      "rectangle": [],
+      "confidence": [],
+      "polygon": [],
+      "count": 0
+    },
+    "acne_pustule": {
+      "rectangle": [
+        {
+          "left": 328,
+          "top": 158,
+          "width": 9,
+          "height": 8
+        }
+      ],
+      "confidence": [
+        0.4480072
+      ],
+      "polygon": [
+        [
+          {
+            "x": 336,
+            "y": 158
+          },
+          {
+            "x": 335,
+            "y": 165
+          },
+          {
+            "x": 332,
+            "y": 165
+          },
+          {
+            "x": 330,
+            "y": 161
+          }
+        ]
+      ],
+      "count": 1
+    },
+    "blackhead_count": 3,
+    "skintone": {
+      "value": 1,
+      "confidence": 0.9776948
+    },
+    "fine_line": {
+      "forehead_count": 1,
+      "left_undereye_count": 0,
+      "right_undereye_count": 3,
+      "left_cheek_count": 0,
+      "right_cheek_count": 0,
+      "left_crowsfeet_count": 0,
+      "right_crowsfeet_count": 1,
+      "glabella_count": 0
+    },
+    "wrinkle_count": {
+      "forehead_count": 0,
+      "left_undereye_count": 1,
+      "right_undereye_count": 2,
+      "left_mouth_count": 0,
+      "right_mouth_count": 0,
+      "left_nasolabial_count": 1,
+      "right_nasolabial_count": 1,
+      "glabella_count": 0,
+      "left_cheek_count": 0,
+      "right_cheek_count": 0,
+      "left_crowsfeet_count": 0,
+      "right_crowsfeet_count": 0
+    },
+    "oily_intensity": {
+      "t_zone": {
+        "area": 0.17,
+        "intensity": 1
+      },
+      "left_cheek": {
+        "area": 0,
+        "intensity": 0
+      },
+      "right_cheek": {
+        "area": 0.09,
+        "intensity": 0
+      },
+      "chin_area": {
+        "area": 0,
+        "intensity": 0
+      },
+      "full_face": {
+        "area": 0.12,
+        "intensity": 0
+      }
+    },
+    "enlarged_pore_count": {
+      "forehead_count": 51,
+      "left_cheek_count": 0,
+      "right_cheek_count": 12,
+      "chin_count": 2
+    },
+    "right_dark_circle_rete": {
+      "value": 3
+    },
+    "left_dark_circle_rete": {
+      "value": 1
+    },
+    "right_dark_circle_pigment": {
+      "value": 1
+    },
+    "left_dark_circle_pigment": {
+      "value": 1
+    },
+    "right_dark_circle_structural": {
+      "value": 0
+    },
+    "left_dark_circle_structural": {
+      "value": 0
+    },
+    "dark_circle_mark": {
+      "left_eye_rect": {
+        "left": 198,
+        "top": 216,
+        "width": 73,
+        "height": 64
+      },
+      "right_eye_rect": {
+        "left": 312,
+        "top": 214,
+        "width": 77,
+        "height": 67
+      }
+    },
+    "water": {
+      "water_severity": 8,
+      "water_area": 0.07,
+      "water_forehead": {
+        "area": 0.07
+      },
+      "water_leftcheek": {
+        "area": 0.005
+      },
+      "water_rightcheek": {
+        "area": 0.124
+      }
+    },
+    "rough": {
+      "rough_severity": 11,
+      "rough_area": 0.13,
+      "rough_forehead": {
+        "area": 0.128
+      },
+      "rough_leftcheek": {
+        "area": 0
+      },
+      "rough_rightcheek": {
+        "area": 0.237
+      },
+      "rough_jaw": {
+        "area": 0.149
+      }
+    },
+    "left_mouth_wrinkle_severity": {
+      "value": 0
+    },
+    "right_mouth_wrinkle_severity": {
+      "value": 0
+    },
+    "forehead_wrinkle_severity": {
+      "value": 0
+    },
+    "left_crows_feet_severity": {
+      "value": 0
+    },
+    "right_crows_feet_severity": {
+      "value": 1
+    },
+    "left_eye_finelines_severity": {
+      "value": 0
+    },
+    "right_eye_finelines_severity": {
+      "value": 0
+    },
+    "glabella_wrinkle_severity": {
+      "value": 0
+    },
+    "left_nasolabial_fold_severity": {
+      "value": 1
+    },
+    "right_nasolabial_fold_severity": {
+      "value": 1
+    },
+    "left_cheek_wrinkle_severity": {
+      "value": 0
+    },
+    "right_cheek_wrinkle_severity": {
+      "value": 0
+    },
+    "forehead_wrinkle_info": {
+      "wrinkle_score": 1,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0.12339978641731075,
+      "wrinkle_norm_depth": 0.08005409060175796,
+      "wrinkle_pixel_density": 0.004117725094581388,
+      "wrinkle_area_ratio": 0.013352667512537006,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 1
+    },
+    "left_eye_wrinkle_info": {
+      "wrinkle_score": 2,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0.41442433703782405,
+      "wrinkle_norm_depth": 0.3884313725490196,
+      "wrinkle_pixel_density": 0.09210560044371019,
+      "wrinkle_area_ratio": 0.03340040241448692,
+      "wrinkle_deep_ratio": 0.95,
+      "wrinkle_deep_num": 1,
+      "wrinkle_shallow_num": 0
+    },
+    "right_eye_wrinkle_info": {
+      "wrinkle_score": 6,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 1.2525891552447412,
+      "wrinkle_norm_depth": 0.22207463630613536,
+      "wrinkle_pixel_density": 0.2745208192659199,
+      "wrinkle_area_ratio": 0.051587301587301584,
+      "wrinkle_deep_ratio": 0.3548387096774194,
+      "wrinkle_deep_num": 2,
+      "wrinkle_shallow_num": 3
+    },
+    "left_crowsfeet_wrinkle_info": {
+      "wrinkle_score": 0,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0,
+      "wrinkle_norm_depth": 0,
+      "wrinkle_pixel_density": 0,
+      "wrinkle_area_ratio": 0,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 0
+    },
+    "right_crowsfeet_wrinkle_info": {
+      "wrinkle_score": 9,
+      "wrinkle_severity_level": 1,
+      "wrinkle_norm_length": 0.40406101782088427,
+      "wrinkle_norm_depth": 0.25098039215686274,
+      "wrinkle_pixel_density": 0.2932442306600475,
+      "wrinkle_area_ratio": 0.017082785808147174,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 1
+    },
+    "glabella_wrinkle_info": {
+      "wrinkle_score": 0,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0,
+      "wrinkle_norm_depth": 0,
+      "wrinkle_pixel_density": 0,
+      "wrinkle_area_ratio": 0,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 0
+    },
+    "left_mouth_wrinkle_info": {
+      "wrinkle_score": 0,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0,
+      "wrinkle_norm_depth": 0,
+      "wrinkle_pixel_density": 0,
+      "wrinkle_area_ratio": 0,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 0
+    },
+    "right_mouth_wrinkle_info": {
+      "wrinkle_score": 0,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0,
+      "wrinkle_norm_depth": 0,
+      "wrinkle_pixel_density": 0,
+      "wrinkle_area_ratio": 0,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 0
+    },
+    "left_nasolabial_wrinkle_info": {
+      "wrinkle_score": 14,
+      "wrinkle_severity_level": 1,
+      "wrinkle_norm_length": 0.2212685825413848,
+      "wrinkle_norm_depth": 0.13886966551326413,
+      "wrinkle_pixel_density": 0.08223716383027012,
+      "wrinkle_area_ratio": 0.14468371467025573,
+      "wrinkle_deep_ratio": 1,
+      "wrinkle_deep_num": 1,
+      "wrinkle_shallow_num": 0
+    },
+    "left_cheek_wrinkle_info": {
+      "wrinkle_score": 0,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0,
+      "wrinkle_norm_depth": 0,
+      "wrinkle_pixel_density": 0,
+      "wrinkle_area_ratio": 0,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 0
+    },
+    "right_cheek_wrinkle_info": {
+      "wrinkle_score": 0,
+      "wrinkle_severity_level": 0,
+      "wrinkle_norm_length": 0,
+      "wrinkle_norm_depth": 0,
+      "wrinkle_pixel_density": 0,
+      "wrinkle_area_ratio": 0,
+      "wrinkle_deep_ratio": 0,
+      "wrinkle_deep_num": 0,
+      "wrinkle_shallow_num": 0
+    },
+    "score_info": {
+      "dark_circle_score": 57,
+      "skin_type_score": 30,
+      "wrinkle_score": 95,
+      "oily_intensity_score": 65,
+      "pores_score": 98,
+      "blackhead_score": 99,
+      "acne_score": 78,
+      "sensitivity_score": 86,
+      "melanin_score": 82,
+      "water_score": 92,
+      "rough_score": 89,
+      "total_score": 81,
+      "pores_type_score": {
+        "pores_forehead_score": 95,
+        "pores_leftcheek_score": 100,
+        "pores_rightcheek_score": 97,
+        "pores_jaw_score": 100
+      },
+      "dark_circle_type_score": {
+        "left_dark_circle_score": 84,
+        "right_dark_circle_score": 73
+      }
+    },
+    "left_eye_pouch_rect": {
+      "left": 198,
+      "top": 216,
+      "width": 73,
+      "height": 64
+    },
+    "right_eye_pouch_rect": {
+      "left": 312,
+      "top": 214,
+      "width": 77,
+      "height": 67
+    },
+    "melasma": {
+      "value": 0,
+      "confidence": 0.25895134
+    },
+    "freckle": {
+      "value": 0,
+      "confidence": 0.3593275
+    },
+    "image_quality": {
+      "face_rect": {
+        "left": 177,
+        "top": 102,
+        "width": 239,
+        "height": 309
+      },
+      "face_ratio": 0.21819551,
+      "hair_occlusion": 0.0017208927,
+      "face_orientation": {
+        "yaw": -4.918961,
+        "pitch": 11.115658,
+        "roll": 0.43854314
+      },
+      "glasses": 0
+    },
+    "sensitivity_type_v1": 1
+  },
+  "face_rectangle": {
+    "top": 192,
+    "left": 182,
+    "width": 231,
+    "height": 230
+  }
+}
