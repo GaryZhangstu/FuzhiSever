@@ -1,7 +1,7 @@
 package com.fuzhi.fuzhisever.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fuzhi.fuzhibackend.DTO.skinanalyzeRequest;
+import com.fuzhi.fuzhisever.DTO.SkinAnalyzeRequest;
 import lombok.AllArgsConstructor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -30,7 +30,7 @@ public class CommunicationService {
 
 
     public Object getFacialReport(String api_key, String api_secret, File image_file) throws IOException {
-        skinanalyzeRequest requestData = new skinanalyzeRequest(api_key, api_secret);
+        SkinAnalyzeRequest requestData = new SkinAnalyzeRequest(api_key, api_secret);
         String jsonString = objectMapper.writeValueAsString(requestData);
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

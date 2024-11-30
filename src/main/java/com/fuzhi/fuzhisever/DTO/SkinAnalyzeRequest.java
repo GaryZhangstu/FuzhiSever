@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class skinanalyzeRequest {
+public class SkinAnalyzeRequest {
     private String api_key;
     private String api_secret;
 
