@@ -3,13 +3,16 @@ package com.fuzhi.fuzhisever.Controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuzhi.fuzhisever.DTO.RegisterRequestDTO;
+import com.fuzhi.fuzhisever.DTO.UserDTO;
 import com.fuzhi.fuzhisever.Model.User;
 import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.PasswordService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -26,6 +29,8 @@ import java.util.UUID;
 @RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
+    private final ModelMapper modelMapper;
+    private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
     private final PasswordService passwordService;
     private final CommunicationService communicationService;
@@ -163,4 +168,20 @@ public class UserController {
         return ResponseEntity.ok(SaResult.ok("密码更新成功"));
     }
 
+    @GetMapping("/userInfo")
+    @SaCheckLogin
+    public ResponseEntity<Object> getUserInfo() {
+        String userId = StpUtil.getLoginId().toString();
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
+        }
+
+        User user = optionalUser.get();
+
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+
+
+        return ResponseEntity.ok(userDTO);
+    }
 }
