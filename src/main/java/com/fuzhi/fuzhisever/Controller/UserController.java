@@ -137,12 +137,12 @@ public class UserController {
             User user = optionalUser.get();
             UUID uuid = UUID.randomUUID();
 
-            String key ="avatar/" + userId + "/" + file.getOriginalFilename()+uuid.toString();
+            String key ="facialAnalysis/" + userId + "/" + uuid+file.getOriginalFilename();
 
             communicationService.uploadFileToS3(file.getResource().getFile(), key);
 
-            user.setAvatar(key);
-            userRepository.save(user);
+
+
 
             return ResponseEntity.ok(SaResult.ok("头像上传成功"));
         } catch (Exception e) {

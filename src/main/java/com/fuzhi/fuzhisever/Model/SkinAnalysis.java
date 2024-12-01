@@ -20,7 +20,7 @@ public class SkinAnalysis {
 
     private String requestId;
 
-    private String imageUrl;
+    private String imageKey;
 
     private Map<String, Object> result;
 }

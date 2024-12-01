@@ -26,9 +26,5 @@ public class testController {
         communicationService.getFacialReport(new File("C:\\Users\\zhang\\Downloads\\屏幕截图 2024-12-01 183547.png"));
         return "test";
     }
-    @RequestMapping("/test2")
-    public String test2() throws Exception {
-        skinAnalysisService.saveSkinAnalysisData(new File("C:\\Users\\zhang\\IdeaProjects\\FuzhiSever\\src\\main\\java\\com\\fuzhi\\fuzhisever\\Service\\simpleResponse.json"));
-        return "test2";
-    }
+
 }
