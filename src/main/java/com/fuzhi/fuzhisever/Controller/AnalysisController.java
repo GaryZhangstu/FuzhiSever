@@ -7,16 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuzhi.fuzhisever.DTO.HistoryDTO;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
 import com.fuzhi.fuzhisever.Model.User;
+import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
 import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,8 +30,9 @@ public class AnalysisController {
     private final UserRepository userRepository;
     private final SkinAnalysisService skinAnalysisService;
     private final ObjectMapper objectMapper;
+    private final SkinAnalysisRepository skinAnalysisRepository;
 
-    @GetMapping("/facialReport")
+    @PostMapping("/facialReport")
     @SaCheckLogin
     public ResponseEntity<SaResult> getFacialReport(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -79,6 +78,18 @@ public class AnalysisController {
                 .map(skinAnalysis -> objectMapper.convertValue(skinAnalysis, HistoryDTO.class))
                 .toList();
         return ResponseEntity.ok(SaResult.data(skinAnalysisDTOList));
+    }
+
+    @GetMapping("/getSkinAnalysisReport")
+    @SaCheckLogin
+    public ResponseEntity<SaResult> getSkinAnalysis(@RequestParam String Id) {
+        Optional<SkinAnalysis> optionalSkinAnalysis = skinAnalysisRepository.findById(Id);
+        if (optionalSkinAnalysis.isEmpty()) {
+            return new ResponseEntity<>(SaResult.error("皮肤分析结果不存在"), HttpStatus.NOT_FOUND);
+        }
+        SkinAnalysis skinAnalysis = optionalSkinAnalysis.get();
+        return ResponseEntity.ok(SaResult.data(skinAnalysis));
+
     }
 
 }

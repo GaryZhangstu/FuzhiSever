@@ -10,9 +10,9 @@ public class HistoryDTO {
 
     private String id;
 
-    private LocalDateTime time;
+    private LocalDateTime  timeStamp;
 
-    private String requestId;
+    private Integer score;
 
     private String imageKey;
 

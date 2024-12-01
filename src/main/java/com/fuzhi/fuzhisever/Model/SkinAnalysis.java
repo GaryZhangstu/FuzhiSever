@@ -16,7 +16,7 @@ public class SkinAnalysis {
     private String id;
 
     @CreatedDate
-    private LocalDateTime time;
+    private LocalDateTime timeStamp;
 
     private String requestId;
 
