@@ -35,3 +35,7 @@ sa-token:
   # 是否输出操作日志
   is-log: true
 
+facialAnalysis:
+  url: https://api-cn.faceplusplus.com/facepp/v1/skinanalyze_pro
+  api_key: 3OArM8NmM2U01LOeRtsIsVkSGKiXgMHB
+  api_secret: HYwoEG6VYWYNQPX2YeuEFlnrMlC-ylDp

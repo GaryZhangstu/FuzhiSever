@@ -1,12 +1,10 @@
 package com.fuzhi.fuzhisever.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fuzhi.fuzhisever.DTO.SkinAnalyzeRequest;
 import lombok.AllArgsConstructor;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
+
+import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -28,15 +26,35 @@ public class CommunicationService {
     private final S3Client s3Client;
     private String bucketName;
 
+    @Value("${facialAnalysis.api_key}")
+    private String api_key;
 
-    public Object getFacialReport(String api_key, String api_secret, File image_file) throws IOException {
-        SkinAnalyzeRequest requestData = new SkinAnalyzeRequest(api_key, api_secret);
-        String jsonString = objectMapper.writeValueAsString(requestData);
+    @Value("${facialAnalysis.api_secret}")
+    private String api_secret;
+
+    @Value("${facialAnalysis.url}")
+    private String url;
+    public Object getFacialReport( File image_file) throws IOException {
+
+
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addPart(RequestBody.create(jsonString, MediaType.get("application/json; charset=utf-8")))
+                .addFormDataPart("image_file", image_file.getName(), RequestBody.create(image_file, MediaType.parse("image/png")))
+                .addFormDataPart("api_key", api_key)
+                .addFormDataPart("api_secret", api_secret)
+                .addFormDataPart("return_maps", "red_area,brown_area,texture_enhanced_pores,texture_enhanced_blackheads,texture_enhanced_oily_area,texture_enhanced_lines,water_area,rough_area,roi_outline_map,texture_enhanced_bw")
                 .build();
-        return null;
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            System.out.println(response.body());
+            return response.body();
+        }
+
     }
     public void uploadFileToS3(File file, String key) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()

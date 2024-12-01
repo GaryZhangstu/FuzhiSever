@@ -13,8 +13,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class SkinAnalysisService {
     private SkinAnalysisRepository skinAnalysisRepository;
+    private ObjectMapper objectMapper;
 
-    public void saveSkinAnalysisData(File jsonFile) throws Exception {
+    public void saveSkinAnalysis(File jsonFile) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonData = objectMapper.readValue(jsonFile, Map.class);
 
@@ -23,6 +24,17 @@ public class SkinAnalysisService {
         skinAnalysis.setResult((Map<String, Object>) jsonData.get("result"));
 
 
+
+        skinAnalysisRepository.save(skinAnalysis);
+    }
+
+    public void saveSkinAnalysisData(Object jsonObject) throws Exception {
+
+        Map<String, Object> jsonData = objectMapper.convertValue(jsonObject, Map.class);
+
+        SkinAnalysis skinAnalysis = new SkinAnalysis();
+        skinAnalysis.setRequestId((String) jsonData.get("request_id"));
+        skinAnalysis.setResult((Map<String, Object>) jsonData.get("result"));
 
         skinAnalysisRepository.save(skinAnalysis);
     }
