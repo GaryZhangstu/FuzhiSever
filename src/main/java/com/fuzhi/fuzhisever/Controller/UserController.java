@@ -1,6 +1,7 @@
 package com.fuzhi.fuzhisever.Controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,6 +54,7 @@ public class UserController {
 
 
     @GetMapping("/isLogin")
+    @SaIgnore
     public ResponseEntity<SaResult> isLogin() {
         try {
             boolean isLoggedIn = StpUtil.isLogin();
@@ -86,6 +88,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @SaIgnore
     public ResponseEntity<SaResult> register(@Valid @RequestBody RegisterRequestDTO registerRequest) {
 
         if (userRepository.findUserByEmail(registerRequest.getEmail()) != null) {
@@ -149,7 +152,7 @@ public class UserController {
 
     @PutMapping("/updatePassword")
     @SaCheckLogin
-    public ResponseEntity<SaResult> updatePassword(@RequestParam String pwd) {
+    public ResponseEntity<SaResult> updatePassword(@RequestParam String oldPwd,@RequestParam String Pwd) {
         String userId = StpUtil.getLoginId().toString();
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
@@ -157,11 +160,11 @@ public class UserController {
         }
 
         User user = optionalUser.get();
-        if (!passwordService.checkPassword(pwd, user.getPwd())) {
+        if (!passwordService.checkPassword(oldPwd, user.getPwd())) {
             return new ResponseEntity<>(SaResult.error("当前密码不正确"), HttpStatus.BAD_REQUEST);
         }
 
-        user.setPwd(passwordService.hashPassword(pwd));
+        user.setPwd(passwordService.hashPassword(Pwd));
 
         userRepository.save(user);
 
