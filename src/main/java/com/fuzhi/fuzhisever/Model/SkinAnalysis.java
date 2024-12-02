@@ -18,6 +18,8 @@ public class SkinAnalysis {
     @CreatedDate
     private LocalDateTime timeStamp;
 
+    private String userId;
+
     private String requestId;
 
     private String imageKey;

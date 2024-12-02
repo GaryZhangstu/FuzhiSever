@@ -41,22 +41,14 @@ public class AnalysisController {
 
         try {
             String userId = StpUtil.getLoginId().toString();
-            Optional<User> optionalUser = userRepository.findById(userId);
-            if (optionalUser.isEmpty()) {
-                return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
-            }
 
-
-            User user = optionalUser.get();
             UUID uuid = UUID.randomUUID();
 
             String key ="facialAnalysis/" + userId + "/" + uuid+file.getOriginalFilename();
 
             communicationService.uploadFileToS3(file.getResource().getFile(), key);
-            SkinAnalysis skinAnalysis =skinAnalysisService.saveSkinAnalysisData(communicationService.getFacialReport(file.getResource().getFile()), key);
-            user.getSkinAnalysisList().add(skinAnalysis);
+            skinAnalysisService.saveSkinAnalysisData(communicationService.getFacialReport(file.getResource().getFile()), key,userId);
 
-            userRepository.save(user);
 
             return ResponseEntity.ok(SaResult.ok("头像上传成功"));
         } catch (Exception e) {
@@ -91,5 +83,6 @@ public class AnalysisController {
         return ResponseEntity.ok(SaResult.data(skinAnalysis));
 
     }
+
 
 }

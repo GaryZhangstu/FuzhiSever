@@ -28,15 +28,18 @@ public class SkinAnalysisService {
         skinAnalysisRepository.save(skinAnalysis);
     }
 
-    public SkinAnalysis saveSkinAnalysisData(Object jsonObject, String imageKey) throws Exception {
+    public SkinAnalysis saveSkinAnalysisData(Object jsonObject, String imageKey,String userId) throws Exception {
 
         Map<String, Object> jsonData = objectMapper.convertValue(jsonObject, Map.class);
 
         SkinAnalysis skinAnalysis = new SkinAnalysis();
         skinAnalysis.setImageKey(imageKey);
+        skinAnalysis.setId(userId);
         skinAnalysis.setRequestId((String) jsonData.get("request_id"));
         skinAnalysis.setResult((Map<String, Object>) jsonData.get("result"));
 
         return skinAnalysisRepository.save(skinAnalysis);
     }
+
+
 }
