@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuzhi.fuzhisever.DTO.HistoryDTO;
+import com.fuzhi.fuzhisever.DTO.InsightsDto;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
 import com.fuzhi.fuzhisever.Model.User;
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
@@ -83,6 +84,17 @@ public class AnalysisController {
         return ResponseEntity.ok(SaResult.data(skinAnalysis));
 
     }
-
+    @GetMapping("/getSkinAnalysisInsights")
+    @SaCheckLogin
+    public ResponseEntity<InsightsDto> getSkinAnalysisInsights() {
+        String userId = StpUtil.getLoginId().toString();
+        List<SkinAnalysis> totalScoreAndTimestamp = skinAnalysisRepository.findTimestampAndTotalScoreByUserId( userId);
+        List<SkinAnalysis> acneScoreAndTimestamp = skinAnalysisRepository.findTimestampAndAcneScoreByUserId( userId);
+        List<SkinAnalysis> blackheadScoreAndTimestamp = skinAnalysisRepository.findTimestampAndBlackheadScoreByUserId( userId);
+        List<SkinAnalysis> roughScoreAndTimestamp = skinAnalysisRepository.findTimestampAndRoughScoreByUserId( userId);
+        List<SkinAnalysis> sensitivityScoreAndTimestamp = skinAnalysisRepository.findTimestampAndSensitivityScoreByUserId( userId);
+        InsightsDto insightsDto = new InsightsDto(totalScoreAndTimestamp, acneScoreAndTimestamp, blackheadScoreAndTimestamp, roughScoreAndTimestamp, sensitivityScoreAndTimestamp);
+        return ResponseEntity.ok(insightsDto);
+    }
 
 }
