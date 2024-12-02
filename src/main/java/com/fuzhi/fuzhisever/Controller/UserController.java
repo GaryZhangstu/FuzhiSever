@@ -137,9 +137,9 @@ public class UserController {
             User user = optionalUser.get();
             UUID uuid = UUID.randomUUID();
 
-            String key ="facialAnalysis/" + userId + "/" + uuid+file.getOriginalFilename();
+            String key ="avatar/" + userId + "/" + uuid+file.getOriginalFilename();
 
-            communicationService.uploadFileToS3(file.getResource().getFile(), key);
+            communicationService.uploadFileToS3(file.getInputStream(), key);
 
 
 

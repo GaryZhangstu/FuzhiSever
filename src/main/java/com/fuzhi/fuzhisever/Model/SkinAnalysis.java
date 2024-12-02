@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 @Document(collection = "SkinAnalysis")
@@ -16,7 +17,7 @@ public class SkinAnalysis {
     private String id;
 
     @CreatedDate
-    private LocalDateTime timeStamp;
+    private Date timeStamp;
 
     private String userId;
 

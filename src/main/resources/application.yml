@@ -17,7 +17,7 @@ aws:
   region: ap-beijing
   s3:
     endpoint: https://cos.ap-beijing.myqcloud.com
-    bucketName: fuzhi-132157
+    bucketName: fuzhi-1321570575
 
 sa-token:
   # token 名称（同时也是 cookie 名称）

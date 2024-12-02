@@ -6,7 +6,9 @@ import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +22,6 @@ public class testController {
 
     private final CommunicationService communicationService;
 
-    @RequestMapping("/test")
-    @SaIgnore
-    public String test() throws IOException {
-        communicationService.getFacialReport(new File("C:\\Users\\zhang\\Downloads\\屏幕截图 2024-12-01 183547.png"));
-        return "test";
-    }
+
 
 }

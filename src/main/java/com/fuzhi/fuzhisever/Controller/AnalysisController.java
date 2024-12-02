@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,8 +48,9 @@ public class AnalysisController {
 
             String key ="facialAnalysis/" + userId + "/" + uuid+file.getOriginalFilename();
 
-            communicationService.uploadFileToS3(file.getResource().getFile(), key);
-            skinAnalysisService.saveSkinAnalysisData(communicationService.getFacialReport(file.getResource().getFile()), key,userId);
+            communicationService.uploadFileToS3(file.getInputStream(), key);
+            Object result =communicationService.getFacialReport(file);
+            skinAnalysisService.saveSkinAnalysisData(result, key,userId);
 
 
             return ResponseEntity.ok(SaResult.ok("头像上传成功"));
