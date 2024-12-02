@@ -6,6 +6,7 @@ import cn.dev33.satoken.util.SaResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuzhi.fuzhisever.DTO.HistoryDTO;
 import com.fuzhi.fuzhisever.DTO.InsightsDto;
+import com.fuzhi.fuzhisever.DTO.TimestampAndScoreDTO;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
 import com.fuzhi.fuzhisever.Model.User;
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
@@ -90,11 +91,11 @@ public class AnalysisController {
     @SaCheckLogin
     public ResponseEntity<InsightsDto> getSkinAnalysisInsights() {
         String userId = StpUtil.getLoginId().toString();
-        List<SkinAnalysis> totalScoreAndTimestamp = skinAnalysisRepository.findTimestampAndTotalScoreByUserId( userId);
-        List<SkinAnalysis> acneScoreAndTimestamp = skinAnalysisRepository.findTimestampAndAcneScoreByUserId( userId);
-        List<SkinAnalysis> blackheadScoreAndTimestamp = skinAnalysisRepository.findTimestampAndBlackheadScoreByUserId( userId);
-        List<SkinAnalysis> roughScoreAndTimestamp = skinAnalysisRepository.findTimestampAndRoughScoreByUserId( userId);
-        List<SkinAnalysis> sensitivityScoreAndTimestamp = skinAnalysisRepository.findTimestampAndSensitivityScoreByUserId( userId);
+        List<TimestampAndScoreDTO> totalScoreAndTimestamp = skinAnalysisRepository.findTimestampAndTotalScoreByUserId( userId);
+        List<TimestampAndScoreDTO> acneScoreAndTimestamp = skinAnalysisRepository.findTimestampAndAcneScoreByUserId( userId);
+        List<TimestampAndScoreDTO> blackheadScoreAndTimestamp = skinAnalysisRepository.findTimestampAndBlackheadScoreByUserId( userId);
+        List<TimestampAndScoreDTO> roughScoreAndTimestamp = skinAnalysisRepository.findTimestampAndRoughScoreByUserId( userId);
+        List<TimestampAndScoreDTO> sensitivityScoreAndTimestamp = skinAnalysisRepository.findTimestampAndSensitivityScoreByUserId( userId);
         InsightsDto insightsDto = new InsightsDto(totalScoreAndTimestamp, acneScoreAndTimestamp, blackheadScoreAndTimestamp, roughScoreAndTimestamp, sensitivityScoreAndTimestamp);
         return ResponseEntity.ok(insightsDto);
     }
