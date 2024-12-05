@@ -14,6 +14,8 @@ import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +39,8 @@ public class AnalysisController {
 
     @PostMapping("/facialReport")
     @SaCheckLogin
-    public ResponseEntity<SaResult> getFacialReport(@RequestParam("file") MultipartFile file) {
+    @CacheEvict(value = "insights")
+    public ResponseEntity<Object> getFacialReport(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(SaResult.error("上传的文件不能为空"));
         }
@@ -51,10 +54,10 @@ public class AnalysisController {
 
             communicationService.uploadFileToS3(file.getInputStream(), key);
             Object result =communicationService.getFacialReport(file);
-            skinAnalysisService.saveSkinAnalysisData(result, key,userId);
+            Object analysisResult =skinAnalysisService.saveSkinAnalysisData(result, key,userId);
 
 
-            return ResponseEntity.ok(SaResult.ok("头像上传成功"));
+            return ResponseEntity.ok(analysisResult);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(SaResult.error("文件上传失败: " + e.getMessage()));
         }
@@ -64,12 +67,8 @@ public class AnalysisController {
     @SaCheckLogin
     public ResponseEntity<SaResult> getSkinAnalysisHistory() {
         String userId = StpUtil.getLoginId().toString();
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
-        }
-        User user = optionalUser.get();
-        List<SkinAnalysis> skinAnalysisList = user.getSkinAnalysisList();
+
+        List<SkinAnalysis> skinAnalysisList = skinAnalysisRepository.findSkinAnalysisByUserId(userId);
         List<HistoryDTO> skinAnalysisDTOList = skinAnalysisList.stream()
                 .map(skinAnalysis -> objectMapper.convertValue(skinAnalysis, HistoryDTO.class))
                 .toList();
@@ -89,6 +88,7 @@ public class AnalysisController {
     }
     @GetMapping("/getSkinAnalysisInsights")
     @SaCheckLogin
+    @Cacheable(value = "insights")
     public ResponseEntity<InsightsDto> getSkinAnalysisInsights() {
         String userId = StpUtil.getLoginId().toString();
         List<TimestampAndScoreDTO> totalScoreAndTimestamp = skinAnalysisRepository.findTimestampAndTotalScoreByUserId( userId);

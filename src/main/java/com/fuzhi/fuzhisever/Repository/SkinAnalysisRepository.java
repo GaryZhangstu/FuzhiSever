@@ -48,4 +48,6 @@ public interface SkinAnalysisRepository extends MongoRepository<SkinAnalysis, St
             "{ $project: { 'timeStamp': 1, 'score': '$result.score_info.total_score' } }"
     })
     List<TimestampAndScoreDTO> findTimestampAndTotalScoreByUserId(String userId);
+
+    List<SkinAnalysis> findSkinAnalysisByUserId(String userId);
 }

@@ -2,6 +2,7 @@ package com.fuzhi.fuzhisever.Controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaIgnore;
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,6 +38,8 @@ public class UserController {
     private final CommunicationService communicationService;
     @PostMapping("/doLogin")
     public ResponseEntity<SaResult> doLogin(@RequestParam String email, @RequestParam String pwd) {
+
+
         try {
             User user = userRepository.findUserByEmail(email);
             if (user == null) {
@@ -44,7 +47,8 @@ public class UserController {
             }
             if (passwordService.checkPassword(pwd, user.getPwd())) {
                 StpUtil.login(user.getId());
-                return ResponseEntity.ok(SaResult.ok("登录成功"));
+                SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+                return ResponseEntity.ok(SaResult.data(tokenInfo));
             }
             return ResponseEntity.status(401).body(SaResult.error("登录失败"));
         } catch (Exception e) {
