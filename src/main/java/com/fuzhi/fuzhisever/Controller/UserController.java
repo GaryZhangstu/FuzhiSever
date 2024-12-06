@@ -144,10 +144,10 @@ public class UserController {
             String key ="avatar/" + userId + "/" + uuid+file.getOriginalFilename();
 
             communicationService.uploadFileToS3(file.getInputStream(), key);
+            user.setAvatar(key);
 
 
-
-
+            userRepository.save(user);
             return ResponseEntity.ok(SaResult.ok("头像上传成功"));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(SaResult.error("文件上传失败: " + e.getMessage()));
