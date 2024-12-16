@@ -3,29 +3,24 @@ spring:
     name: FuzhiBackend
   data:
     mongodb:
-      uri: ${MONGO_URL}
+      uri: mongodb://mongo_jB4a4Y:mongo_Fm5tAG@81.70.219.168:27017/fuzhi?authSource=admin
+
+
 
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      enabled: true
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "health,info,metrics"
-  metrics:
-    enable:
-      cache: true
+
+
 
 aws:
-  accessKeyId: ${ accessKeyId }
-  secretAccessKey: ${ secretAccessKey }
-  region: ${ region }
+  accessKeyId: AKID32qVyISQCC80qY5PaeaREvUs780ra4OY
+  secretAccessKey: 4vqbBYorhOuGQOCqKbosmTzJTeieQbaK
+  region: ap-beijing
   s3:
-    endpoint: ${ endpoint }
-    bucketName: ${ bucketName }
+    endpoint: https://cos.ap-beijing.myqcloud.com
+    bucketName: fuzhi-1321570575
 
 sa-token:
   # token 名称（同时也是 cookie 名称）
@@ -43,7 +38,10 @@ sa-token:
   # 是否输出操作日志
   is-log: true
 
+  token-prefix: Bearer
+
 facialAnalysis:
-  url: ${ url }
-  api_key: ${ api_key }
-  api_secret: ${ api_secret }
+  url: https://api-cn.faceplusplus.com/facepp/v1/skinanalyze_pro
+  api_key: 3OArM8NmM2U01LOeRtsIsVkSGKiXgMHB
+  api_secret: HYwoEG6VYWYNQPX2YeuEFlnrMlC-ylDp
+
