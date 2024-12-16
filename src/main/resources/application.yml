@@ -3,7 +3,10 @@ spring:
     name: FuzhiBackend
   data:
     mongodb:
-      uri: mongodb://mongo_jB4a4Y:mongo_Fm5tAG@81.70.219.168:27017/fuzhi
+      uri: mongodb://mongo_jB4a4Y:mongo_Fm5tAG@81.70.219.168:27017/fuzhi?authSource=admin
+
+
+
   servlet:
     multipart:
       max-file-size: 10MB

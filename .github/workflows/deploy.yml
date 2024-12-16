@@ -1,0 +1,22 @@
+name: deploy.yml
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy use docker
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets .PASSWORD }}
+          script: |
+            sudo docker stop ${{ secrets.DOCKER_NAME }}
+            sudo docker rm ${{ secrets.DOCKER_NAME }}
+            sudo docker pull ${{ secrets.DOCKER_IMAGE }}:${{ secrets.DOCKER_TAG }}
+            sudo docker run -d --name ${{ secrets.DOCKER_NAME }} -p 8080:8080 ${{ secrets.DOCKER_IMAGE }}:${{ secrets.DOCKER_TAG }}
+            echo "deploy success"
+            
+          

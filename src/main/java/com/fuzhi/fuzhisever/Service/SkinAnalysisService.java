@@ -56,6 +56,25 @@ public class SkinAnalysisService {
         } else {
             throw new Exception("Missing or invalid 'result' in JSON data");
         }
+        // 获取 face_maps 对象
+        Map<String, String> face_maps = (Map<String, String>) skinAnalysis.getResult().get("face_maps");
+
+        if (face_maps != null) {
+
+            String brownArea = face_maps.get("brown_area");
+            String redArea = face_maps.get("red_area");
+            String roiOutlineMap = face_maps.get("roi_outline_map");
+            String roughArea = face_maps.get("rough_area");
+            String waterArea = face_maps.get("water_area");
+            String textureEnhancedBlackheads = face_maps.get("texture_enhanced_blackheads");
+            String textureEnhancedBw = face_maps.get("texture_enhanced_bw");
+            String textureEnhancedLines = face_maps.get("texture_enhanced_lines");
+            String textureEnhancedOilyArea = face_maps.get("texture_enhanced_oily_area");
+            String textureEnhancedPores = face_maps.get("texture_enhanced_pores");
+
+        } else {
+            System.out.println("face_maps not found in the result");
+        }
 
         // Save the SkinAnalysis object
         try {

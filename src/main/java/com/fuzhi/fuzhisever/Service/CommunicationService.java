@@ -13,10 +13,12 @@ import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.Base64;
 
 @Service
 @AllArgsConstructor
@@ -74,13 +76,15 @@ public class CommunicationService {
 
     public void uploadFileToS3(InputStream inputStream, String key) throws IOException {
         System.out.println("aws s3 "+bucketExists(bucketName)+bucketName);
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
                 .build();
-        PutObjectResponse res = s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
+        s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
 
     }
+
     private boolean bucketExists(String bucketName) {
         try {
             s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
