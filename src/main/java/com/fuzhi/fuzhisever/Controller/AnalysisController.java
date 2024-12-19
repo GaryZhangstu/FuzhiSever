@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,7 +52,10 @@ public class AnalysisController {
 
             UUID uuid = UUID.randomUUID();
 
-            String key ="facialAnalysis/" + userId + "/" + uuid+file.getOriginalFilename();
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+            String timestamp = now.format(formatter);
+            String key ="facialAnalysis/" + userId + "/"+timestamp +"/" + uuid+file.getOriginalFilename();
 
             communicationService.uploadFileToS3(file.getInputStream(), key);
             Object result =communicationService.getFacialReport(file);
