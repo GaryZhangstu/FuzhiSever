@@ -20,6 +20,8 @@ public class SkinAnalysis {
 
     private String userId;
 
+    private Map<String,String> faceMaps;
+
     private String requestId;
 
     private String imageKey;

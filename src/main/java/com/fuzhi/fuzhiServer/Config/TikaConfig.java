@@ -1,5 +1,4 @@
-package com.fuzhi.fuzhiServer.Config;
-
+package com.fuzhi.fuzhisever.Config;
 
 import org.apache.tika.Tika;
 import org.springframework.context.annotation.Bean;

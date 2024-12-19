@@ -7,13 +7,18 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class SkinAnalysisService {
     private SkinAnalysisRepository skinAnalysisRepository;
     private ObjectMapper objectMapper;
+    private final CommunicationService communicationService;
 
     public void saveSkinAnalysis(File jsonFile) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -56,9 +61,12 @@ public class SkinAnalysisService {
         } else {
             throw new Exception("Missing or invalid 'result' in JSON data");
         }
+
         // 获取 face_maps 对象
         Map<String, String> face_maps = (Map<String, String>) skinAnalysis.getResult().get("face_maps");
-
+        Map<String, Object> result = skinAnalysis.getResult();
+        result.remove("face_maps");
+        skinAnalysis.setResult(result);
         if (face_maps != null) {
 
             String brownArea = face_maps.get("brown_area");
@@ -71,7 +79,27 @@ public class SkinAnalysisService {
             String textureEnhancedLines = face_maps.get("texture_enhanced_lines");
             String textureEnhancedOilyArea = face_maps.get("texture_enhanced_oily_area");
             String textureEnhancedPores = face_maps.get("texture_enhanced_pores");
+            Map<String, String> newMap = new HashMap<>();
+            newMap.put("brown_area", brownArea);
+            newMap.put("red_area", redArea);
+            newMap.put("roi_outline_map", roiOutlineMap);
+            newMap.put("rough_area", roughArea);
+            newMap.put("water_area", waterArea);
+            newMap.put("texture_enhanced_blackheads", textureEnhancedBlackheads);
+            newMap.put("texture_enhanced_bw", textureEnhancedBw);
+            newMap.put("texture_enhanced_lines", textureEnhancedLines);
+            newMap.put("texture_enhanced_oily_area", textureEnhancedOilyArea);
+            newMap.put("texture_enhanced_pores", textureEnhancedPores);
+            for (Map.Entry<String, String> entry : newMap.entrySet()) {
+                UUID uuid = UUID.randomUUID();
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+                String timestamp = now.format(formatter);
 
+                String key ="facialAnalysis/" + userId + "/" +timestamp + "/"+ uuid+entry.getKey();
+                communicationService.uploadBase64Image(entry.getValue(), key);
+            }
+            skinAnalysis.setFaceMaps(newMap);
         } else {
             System.out.println("face_maps not found in the result");
         }

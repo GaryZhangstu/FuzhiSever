@@ -23,6 +23,7 @@ import java.util.Base64;
 @Service
 @AllArgsConstructor
 public class CommunicationService {
+    private final FileService fileService;
     private final OkHttpClient okHttpClient;
     private final ObjectMapper objectMapper;
     private final S3Client s3Client;
@@ -72,13 +73,25 @@ public class CommunicationService {
             return objectMapper.readValue(responseBody.string(), Object.class);
         }
     }
+    public void uploadBase64Image(String base64Image, String key) throws IOException {
 
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
+
+        InputStream inputStream = new ByteArrayInputStream(imageBytes);
+
+
+        uploadFileToS3(inputStream, key);
+    }
 
     public void uploadFileToS3(InputStream inputStream, String key) throws IOException {
         System.out.println("aws s3 "+bucketExists(bucketName)+bucketName);
 
+        String contentType = fileService.getFileType(inputStream);
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
+                .contentType(contentType)
+                .contentDisposition("inline")
                 .key(key)
                 .build();
         s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
