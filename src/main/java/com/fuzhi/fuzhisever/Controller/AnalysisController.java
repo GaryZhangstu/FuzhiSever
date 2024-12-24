@@ -57,9 +57,9 @@ public class AnalysisController {
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
             String timestamp = now.format(formatter);
-            String key ="facialAnalysis/" + userId + "/"+timestamp +"/" + uuid+file.getOriginalFilename();
+            String key ="facialAnalysis/" + userId + "/"+timestamp +"/" + uuid;
 
-            communicationService.uploadFileToS3(file.getInputStream(), key);
+            communicationService.uploadFileToS3(file.getInputStream(), "test/"+file.getOriginalFilename());
             Object result =communicationService.getFacialReport(file);
             Object analysisResult =skinAnalysisService.saveSkinAnalysisData(result, key,userId);
 

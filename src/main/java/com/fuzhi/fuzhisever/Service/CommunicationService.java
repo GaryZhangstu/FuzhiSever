@@ -92,22 +92,20 @@ public class CommunicationService {
         try (InputStream is = inputStream) {
             log.info("aws s3 bucket exists: {}", bucketExists(bucketName));
 
-            String contentType = fileService.getFileType(is);
+
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .contentType(contentType)
                     .key(key)
+                    .contentType(fileService.getFileType(inputStream))
                     .build();
 
-            log.info(contentType,inputStream.available());
+
             putObjectRequest = putObjectRequest.toBuilder()
                     .contentDisposition("inline")
                     .build();
 
 
-
-
-            s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
+            s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(is,is.available()));
         } catch (IOException e) {
             log.error("Failed to upload file to S3", e);
             throw e;
