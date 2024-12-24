@@ -77,6 +77,8 @@ public class CommunicationService {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
+                .contentType("image/png")
+                .contentDisposition("inline")
                 .build();
         PutObjectResponse res = s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
 
