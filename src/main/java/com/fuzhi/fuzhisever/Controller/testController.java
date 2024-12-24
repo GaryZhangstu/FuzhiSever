@@ -3,6 +3,7 @@ package com.fuzhi.fuzhisever.Controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
+import com.fuzhi.fuzhisever.Service.FileService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +22,13 @@ public class testController {
     private final SkinAnalysisService skinAnalysisService;
 
     private final CommunicationService communicationService;
+    private final FileService fileService;
 
     @SaIgnore
     @RequestMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {
-        communicationService.uploadFileToS3(file.getInputStream(), "test/"+file.getOriginalFilename());
-        return "ok";
+       communicationService.uploadFileToS3(file.getInputStream(), "test/"+file.getOriginalFilename());
+       return fileService.getFileType(file.getInputStream());
     }
 
 
