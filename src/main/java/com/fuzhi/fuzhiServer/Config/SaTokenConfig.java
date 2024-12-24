@@ -1,4 +1,4 @@
-package com.fuzhi.fuzhiServer.Config;
+package com.fuzhi.fuzhisever.Config;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import org.springframework.context.annotation.Configuration;

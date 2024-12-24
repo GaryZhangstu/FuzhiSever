@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SkinAnalysisService {
@@ -79,6 +81,7 @@ public class SkinAnalysisService {
             String textureEnhancedLines = face_maps.get("texture_enhanced_lines");
             String textureEnhancedOilyArea = face_maps.get("texture_enhanced_oily_area");
             String textureEnhancedPores = face_maps.get("texture_enhanced_pores");
+            System.out.println("face_maps: " + face_maps);
             Map<String, String> newMap = new HashMap<>();
             newMap.put("brown_area", brownArea);
             newMap.put("red_area", redArea);
@@ -90,16 +93,19 @@ public class SkinAnalysisService {
             newMap.put("texture_enhanced_lines", textureEnhancedLines);
             newMap.put("texture_enhanced_oily_area", textureEnhancedOilyArea);
             newMap.put("texture_enhanced_pores", textureEnhancedPores);
+            Map<String, String> face_pic = new HashMap<>();
             for (Map.Entry<String, String> entry : newMap.entrySet()) {
                 UUID uuid = UUID.randomUUID();
                 LocalDateTime now = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
                 String timestamp = now.format(formatter);
-
+                System.out.println(entry.getValue());
                 String key ="facialAnalysis/" + userId + "/" +timestamp + "/"+ uuid+entry.getKey();
                 communicationService.uploadBase64Image(entry.getValue(), key);
+                face_pic.put(entry.getKey(), key);
             }
-            skinAnalysis.setFaceMaps(newMap);
+
+            skinAnalysis.setFaceMaps(face_pic);
         } else {
             System.out.println("face_maps not found in the result");
         }
