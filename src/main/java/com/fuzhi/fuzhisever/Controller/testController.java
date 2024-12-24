@@ -5,6 +5,7 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,11 @@ public class testController {
 
     private final CommunicationService communicationService;
 
-
+    @SaIgnore
+    @PostMapping("/upload")
+    public String test(@RequestParam("file") MultipartFile file) throws IOException {
+        communicationService.uploadFileToS3(file.getInputStream(), "test/"+file.getOriginalFilename());
+        return "success";
+    }
 
 }
