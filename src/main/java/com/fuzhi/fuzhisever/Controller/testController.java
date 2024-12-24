@@ -26,7 +26,7 @@ public class testController {
     @SaIgnore
     @PostMapping("/upload")
     public String test(@RequestParam("file") MultipartFile file) throws IOException {
-        communicationService.uploadFileToS3(file.getInputStream(), "test/"+file.getOriginalFilename());
+
         return "success";
     }
 
