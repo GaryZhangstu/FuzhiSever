@@ -14,6 +14,7 @@ import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/analysis")
 @RequiredArgsConstructor
+@Slf4j
 public class AnalysisController {
     private final CommunicationService communicationService;
     private final UserRepository userRepository;

@@ -3,6 +3,7 @@ package com.fuzhi.fuzhisever.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.Base64;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CommunicationService {
     private final FileService fileService;
     private final OkHttpClient okHttpClient;
@@ -85,17 +87,31 @@ public class CommunicationService {
     }
 
     public void uploadFileToS3(InputStream inputStream, String key) throws IOException {
-        System.out.println("aws s3 "+bucketExists(bucketName)+bucketName);
 
-        String contentType = fileService.getFileType(inputStream);
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .contentType(contentType)
-                .contentDisposition("inline")
-                .key(key)
-                .build();
-        s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
 
+        try (InputStream is = inputStream) {
+            log.info("aws s3 bucket exists: {}", bucketExists(bucketName));
+
+            String contentType = fileService.getFileType(is);
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .contentType(contentType)
+                    .key(key)
+                    .build();
+
+            log.info(contentType,inputStream.available());
+            putObjectRequest = putObjectRequest.toBuilder()
+                    .contentDisposition("inline")
+                    .build();
+
+
+
+
+            s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
+        } catch (IOException e) {
+            log.error("Failed to upload file to S3", e);
+            throw e;
+        }
     }
 
     private boolean bucketExists(String bucketName) {
