@@ -25,6 +25,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @RestController
@@ -70,13 +73,22 @@ public class AnalysisController {
         String userId = StpUtil.getLoginId().toString();
 
         List<SkinAnalysis> skinAnalysisList = skinAnalysisRepository.findSkinAnalysisByUserId(userId);
-        List<HistoryDTO> skinAnalysisDTOList = skinAnalysisList.stream()
-                .map(skinAnalysis ->{
-                    HistoryDTO historyDTO =objectMapper.convertValue(skinAnalysis, HistoryDTO.class);
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+
+        List<CompletableFuture<HistoryDTO>> futures = skinAnalysisList.stream()
+                .map(skinAnalysis -> CompletableFuture.supplyAsync(() -> {
+                    HistoryDTO historyDTO = objectMapper.convertValue(skinAnalysis, HistoryDTO.class);
                     historyDTO.setScore(skinAnalysis.getResult().get("score_info"));
                     return historyDTO;
-                } )
+                }, executor))
                 .toList();
+
+        // 等待所有任务完成并收集结果
+        List<HistoryDTO> skinAnalysisDTOList = futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+
+        executor.shutdown();
         return ResponseEntity.ok(SaResult.data(skinAnalysisDTOList));
     }
 
