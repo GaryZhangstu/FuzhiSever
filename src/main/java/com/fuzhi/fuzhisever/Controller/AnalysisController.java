@@ -39,7 +39,7 @@ public class AnalysisController {
 
     @PostMapping("/facialReport")
     @SaCheckLogin
-    @CacheEvict(value = "insights")
+    @CacheEvict(value = {"insights", "history"}, allEntries = true)
     public ResponseEntity<Object> getFacialReport(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(SaResult.error("上传的文件不能为空"));
@@ -65,12 +65,17 @@ public class AnalysisController {
 
     @GetMapping("/getSkinAnalysisHistory")
     @SaCheckLogin
+    @Cacheable(value = "history")
     public ResponseEntity<SaResult> getSkinAnalysisHistory() {
         String userId = StpUtil.getLoginId().toString();
 
         List<SkinAnalysis> skinAnalysisList = skinAnalysisRepository.findSkinAnalysisByUserId(userId);
         List<HistoryDTO> skinAnalysisDTOList = skinAnalysisList.stream()
-                .map(skinAnalysis -> objectMapper.convertValue(skinAnalysis, HistoryDTO.class))
+                .map(skinAnalysis ->{
+                    HistoryDTO historyDTO =objectMapper.convertValue(skinAnalysis, HistoryDTO.class);
+                    historyDTO.setScore(skinAnalysis.getResult().get("score_info"));
+                    return historyDTO;
+                } )
                 .toList();
         return ResponseEntity.ok(SaResult.data(skinAnalysisDTOList));
     }

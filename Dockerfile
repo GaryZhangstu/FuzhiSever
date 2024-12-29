@@ -1,5 +1,5 @@
 
-FROM amazoncorretto:21
+FROM amazoncorretto:21-alpine
 
 # 设置工作目录
 WORKDIR /app
