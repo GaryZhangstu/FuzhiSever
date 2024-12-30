@@ -53,7 +53,7 @@ public class CommunicationService {
                 .addFormDataPart("image_file", fileName, RequestBody.create(image_file.getBytes(), mediaType))
                 .addFormDataPart("api_key", api_key)
                 .addFormDataPart("api_secret", api_secret)
-                .addFormDataPart("return_maps", "red_area,brown_area,texture_enhanced_pores,texture_enhanced_blackheads,texture_enhanced_oily_area,texture_enhanced_lines,water_area,rough_area,roi_outline_map,texture_enhanced_bw")
+                //.addFormDataPart("return_maps", "red_area,brown_area,texture_enhanced_pores,texture_enhanced_blackheads,texture_enhanced_oily_area,texture_enhanced_lines,water_area,rough_area,roi_outline_map,texture_enhanced_bw")
                 .build();
 
         Request request = new Request.Builder()
