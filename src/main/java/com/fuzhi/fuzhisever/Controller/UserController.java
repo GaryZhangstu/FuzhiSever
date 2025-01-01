@@ -15,6 +15,7 @@ import com.fuzhi.fuzhisever.Service.PasswordService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -32,7 +33,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserController {
     private final ModelMapper modelMapper;
-    private final ObjectMapper objectMapper;
+
     private final UserRepository userRepository;
     private final PasswordService passwordService;
     private final CommunicationService communicationService;
@@ -113,16 +114,7 @@ public class UserController {
 
         return new ResponseEntity<>(SaResult.ok("注册成功"), HttpStatus.CREATED);
     }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
+
 
     @PostMapping("/uploadAvatar")
     @SaCheckLogin
@@ -177,6 +169,7 @@ public class UserController {
 
     @GetMapping("/userInfo")
     @SaCheckLogin
+    @Cacheable(value = "userInfo")
     public ResponseEntity<Object> getUserInfo() {
         String userId = StpUtil.getLoginId().toString();
         Optional<User> optionalUser = userRepository.findById(userId);

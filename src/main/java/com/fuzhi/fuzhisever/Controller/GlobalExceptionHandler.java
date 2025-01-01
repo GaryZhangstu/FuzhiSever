@@ -33,6 +33,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotLoginException.class)
     public ResponseEntity<SaResult> handleNotLoginException(NotLoginException e) {
         // 返回403 Forbidden状态码
-        return new ResponseEntity<>(new SaResult(403, "token无效", null), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new SaResult(401, "token无效", null), HttpStatus.UNAUTHORIZED);
     }
 }

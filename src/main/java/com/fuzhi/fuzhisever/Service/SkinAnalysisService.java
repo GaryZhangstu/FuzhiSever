@@ -1,7 +1,9 @@
 package com.fuzhi.fuzhisever.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fuzhi.fuzhisever.Model.History;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
+import com.fuzhi.fuzhisever.Repository.HistoryRepository;
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class SkinAnalysisService {
     private SkinAnalysisRepository skinAnalysisRepository;
     private ObjectMapper objectMapper;
+    private HistoryRepository historyRepository;
 
     public void saveSkinAnalysis(File jsonFile) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -59,7 +62,12 @@ public class SkinAnalysisService {
 
         // Save the SkinAnalysis object
         try {
-            return skinAnalysisRepository.save(skinAnalysis);
+
+            SkinAnalysis savedSkinAnalysis = skinAnalysisRepository.save(skinAnalysis);
+            History history = objectMapper.convertValue(savedSkinAnalysis, History.class);
+            history.setScore(savedSkinAnalysis.getResult().get("score_info"));
+            historyRepository.save(history);
+            return savedSkinAnalysis;
         } catch (Exception e) {
             throw new Exception("Failed to save SkinAnalysis data", e);
         }
