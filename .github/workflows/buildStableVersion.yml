@@ -18,6 +18,13 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Get branch name
+        id: get_branch_name
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${BRANCH_NAME#release/}
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
       - name: setup java env
         uses: actions/setup-java@v4
         with:
@@ -43,5 +50,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: g-cifm8661-docker.pkg.coding.net/fuzhi/server/fuzhi_backend:latest
+          tags: g-cifm8661-docker.pkg.coding.net/fuzhi/server/fuzhi_backend:${{ env.BRANCH_NAME }}
 

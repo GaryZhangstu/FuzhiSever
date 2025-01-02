@@ -18,18 +18,6 @@ public class SkinAnalysisService {
     private ObjectMapper objectMapper;
     private HistoryRepository historyRepository;
 
-    public void saveSkinAnalysis(File jsonFile) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> jsonData = objectMapper.readValue(jsonFile, Map.class);
-
-        SkinAnalysis skinAnalysis = new SkinAnalysis();
-        skinAnalysis.setRequestId((String) jsonData.get("request_id"));
-        skinAnalysis.setResult((Map<String, Object>) jsonData.get("result"));
-
-
-
-        skinAnalysisRepository.save(skinAnalysis);
-    }
 
     public SkinAnalysis saveSkinAnalysisData(Object jsonObject, String imageKey, String userId) throws Exception {
 
@@ -64,7 +52,12 @@ public class SkinAnalysisService {
         try {
 
             SkinAnalysis savedSkinAnalysis = skinAnalysisRepository.save(skinAnalysis);
-            History history = objectMapper.convertValue(savedSkinAnalysis, History.class);
+            History history = new History();
+            history.setId(savedSkinAnalysis.getId());
+            history.setUserId(savedSkinAnalysis.getUserId());
+            history.setTimeStamp(savedSkinAnalysis.getTimeStamp());
+            history.setImageKey(savedSkinAnalysis.getImageKey());
+
             history.setScore(savedSkinAnalysis.getResult().get("score_info"));
             historyRepository.save(history);
             return savedSkinAnalysis;

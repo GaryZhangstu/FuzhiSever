@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuzhi.fuzhisever.DTO.HistoryDTO;
 import com.fuzhi.fuzhisever.DTO.InsightsDto;
 import com.fuzhi.fuzhisever.DTO.TimestampAndScoreDTO;
+import com.fuzhi.fuzhisever.Model.History;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
 import com.fuzhi.fuzhisever.Model.User;
+import com.fuzhi.fuzhisever.Repository.HistoryRepository;
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
 import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
@@ -39,6 +41,7 @@ public class AnalysisController {
     private final SkinAnalysisService skinAnalysisService;
     private final ObjectMapper objectMapper;
     private final SkinAnalysisRepository skinAnalysisRepository;
+    private final HistoryRepository historyRepository;
 
     @PostMapping("/facialReport")
     @SaCheckLogin
@@ -71,25 +74,9 @@ public class AnalysisController {
     @Cacheable(value = "history")
     public ResponseEntity<SaResult> getSkinAnalysisHistory() {
         String userId = StpUtil.getLoginId().toString();
+        List<History> historyList = historyRepository.findAllByUserIdOrderByTimeStamp(userId);
 
-        List<SkinAnalysis> skinAnalysisList = skinAnalysisRepository.findSkinAnalysisByUserId(userId);
-        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-
-        List<CompletableFuture<HistoryDTO>> futures = skinAnalysisList.stream()
-                .map(skinAnalysis -> CompletableFuture.supplyAsync(() -> {
-                    HistoryDTO historyDTO = objectMapper.convertValue(skinAnalysis, HistoryDTO.class);
-                    historyDTO.setScore(skinAnalysis.getResult().get("score_info"));
-                    return historyDTO;
-                }, executor))
-                .toList();
-
-        // 等待所有任务完成并收集结果
-        List<HistoryDTO> skinAnalysisDTOList = futures.stream()
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
-
-        executor.shutdown();
-        return ResponseEntity.ok(SaResult.data(skinAnalysisDTOList));
+        return ResponseEntity.ok(SaResult.data(historyList));
     }
 
     @GetMapping("/getSkinAnalysisReport")
@@ -106,6 +93,7 @@ public class AnalysisController {
     @GetMapping("/getSkinAnalysisInsights")
     @SaCheckLogin
     @Cacheable(value = "insights")
+    @Deprecated
     public ResponseEntity<InsightsDto> getSkinAnalysisInsights() {
         String userId = StpUtil.getLoginId().toString();
         List<TimestampAndScoreDTO> totalScoreAndTimestamp = skinAnalysisRepository.findTimestampAndTotalScoreByUserId( userId);
