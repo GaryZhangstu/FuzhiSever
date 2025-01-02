@@ -169,6 +169,7 @@ public class UserController {
         return ResponseEntity.ok(SaResult.ok("密码更新成功"));
     }
 
+    @Cacheable(value = "userInfo", key = "#userId")
     @GetMapping("/userInfo")
     @SaCheckLogin
     public ResponseEntity<Object> getUserInfo() {

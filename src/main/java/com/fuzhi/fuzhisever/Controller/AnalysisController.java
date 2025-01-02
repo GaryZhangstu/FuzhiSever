@@ -44,29 +44,33 @@ public class AnalysisController {
     private final SkinAnalysisRepository skinAnalysisRepository;
     private final HistoryService historyService;
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+
     @PostMapping("/facialReport")
     @SaCheckLogin
     @CacheEvict(value = { "history"}, key = "#userId")
-    public ResponseEntity<Object> getFacialReport(@RequestParam("file") MultipartFile file) {
+    public CompletableFuture<ResponseEntity<Object>> getFacialReport(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(SaResult.error("上传的文件不能为空"));
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(SaResult.error("上传的文件不能为空")));
         }
 
-        try {
-            String userId = StpUtil.getLoginId().toString();
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                String userId = StpUtil.getLoginId().toString();
 
-            UUID uuid = UUID.randomUUID();
+                UUID uuid = UUID.randomUUID();
 
-            String key = "facialAnalysis/" + userId + "/" + uuid + file.getOriginalFilename();
+                String key = "facialAnalysis/" + userId + "/" + uuid + file.getOriginalFilename();
 
-            communicationService.uploadFileToS3(file.getInputStream(), key);
-            Object result = communicationService.getFacialReport(file);
-            Object analysisResult = skinAnalysisService.saveSkinAnalysisData(result, key, userId);
+                communicationService.uploadFileToS3(file.getInputStream(), key);
+                Object result = communicationService.getFacialReport(file);
+                Object analysisResult = skinAnalysisService.saveSkinAnalysisData(result, key, userId);
 
-            return ResponseEntity.ok(analysisResult);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(SaResult.error("文件上传失败: " + e.getMessage()));
-        }
+                return ResponseEntity.ok(analysisResult);
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body(SaResult.error("文件上传失败: " + e.getMessage()));
+            }
+        }, executorService);
     }
 
 
