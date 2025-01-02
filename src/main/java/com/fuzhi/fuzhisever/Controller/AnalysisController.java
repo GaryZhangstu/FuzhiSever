@@ -14,6 +14,7 @@ import com.fuzhi.fuzhisever.Repository.HistoryRepository;
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
 import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
+import com.fuzhi.fuzhisever.Service.HistoryService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,15 +38,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AnalysisController {
     private final CommunicationService communicationService;
-    private final UserRepository userRepository;
+
     private final SkinAnalysisService skinAnalysisService;
-    private final ObjectMapper objectMapper;
+
     private final SkinAnalysisRepository skinAnalysisRepository;
-    private final HistoryRepository historyRepository;
+    private final HistoryService historyService;
 
     @PostMapping("/facialReport")
     @SaCheckLogin
-    @CacheEvict(value = {"insights", "history"}, allEntries = true)
+    @CacheEvict(value = { "history"}, key = "#userId")
     public ResponseEntity<Object> getFacialReport(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(SaResult.error("上传的文件不能为空"));
@@ -56,12 +57,11 @@ public class AnalysisController {
 
             UUID uuid = UUID.randomUUID();
 
-            String key ="facialAnalysis/" + userId + "/" + uuid+file.getOriginalFilename();
+            String key = "facialAnalysis/" + userId + "/" + uuid + file.getOriginalFilename();
 
             communicationService.uploadFileToS3(file.getInputStream(), key);
-            Object result =communicationService.getFacialReport(file);
-            Object analysisResult =skinAnalysisService.saveSkinAnalysisData(result, key,userId);
-
+            Object result = communicationService.getFacialReport(file);
+            Object analysisResult = skinAnalysisService.saveSkinAnalysisData(result, key, userId);
 
             return ResponseEntity.ok(analysisResult);
         } catch (Exception e) {
@@ -69,12 +69,12 @@ public class AnalysisController {
         }
     }
 
+
     @GetMapping("/getSkinAnalysisHistory")
     @SaCheckLogin
-    @Cacheable(value = "history")
     public ResponseEntity<SaResult> getSkinAnalysisHistory() {
         String userId = StpUtil.getLoginId().toString();
-        List<History> historyList = historyRepository.findAllByUserIdOrderByTimeStamp(userId);
+        List<History> historyList = historyService.findAllByUserIdOrderByTimeStamp(userId);
 
         return ResponseEntity.ok(SaResult.data(historyList));
     }
@@ -90,19 +90,6 @@ public class AnalysisController {
         return ResponseEntity.ok(SaResult.data(skinAnalysis));
 
     }
-    @GetMapping("/getSkinAnalysisInsights")
-    @SaCheckLogin
-    @Cacheable(value = "insights")
-    @Deprecated
-    public ResponseEntity<InsightsDto> getSkinAnalysisInsights() {
-        String userId = StpUtil.getLoginId().toString();
-        List<TimestampAndScoreDTO> totalScoreAndTimestamp = skinAnalysisRepository.findTimestampAndTotalScoreByUserId( userId);
-        List<TimestampAndScoreDTO> acneScoreAndTimestamp = skinAnalysisRepository.findTimestampAndAcneScoreByUserId( userId);
-        List<TimestampAndScoreDTO> blackheadScoreAndTimestamp = skinAnalysisRepository.findTimestampAndBlackheadScoreByUserId( userId);
-        List<TimestampAndScoreDTO> roughScoreAndTimestamp = skinAnalysisRepository.findTimestampAndRoughScoreByUserId( userId);
-        List<TimestampAndScoreDTO> sensitivityScoreAndTimestamp = skinAnalysisRepository.findTimestampAndSensitivityScoreByUserId( userId);
-        InsightsDto insightsDto = new InsightsDto(totalScoreAndTimestamp, acneScoreAndTimestamp, blackheadScoreAndTimestamp, roughScoreAndTimestamp, sensitivityScoreAndTimestamp);
-        return ResponseEntity.ok(insightsDto);
-    }
+
 
 }

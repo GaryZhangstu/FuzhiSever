@@ -12,6 +12,7 @@ import com.fuzhi.fuzhisever.Model.User;
 import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.PasswordService;
+import com.fuzhi.fuzhisever.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -37,6 +38,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final PasswordService passwordService;
     private final CommunicationService communicationService;
+    private final UserService userService;
     @PostMapping("/doLogin")
     public ResponseEntity<SaResult> doLogin(@RequestParam String email, @RequestParam String pwd) {
 
@@ -125,7 +127,7 @@ public class UserController {
 
         try {
             String userId = StpUtil.getLoginId().toString();
-            Optional<User> optionalUser = userRepository.findById(userId);
+            Optional<User> optionalUser = userService.findUserById(userId);
             if (optionalUser.isEmpty()) {
                 return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
             }
@@ -150,7 +152,7 @@ public class UserController {
     @SaCheckLogin
     public ResponseEntity<SaResult> updatePassword(@RequestParam String oldPwd,@RequestParam String Pwd) {
         String userId = StpUtil.getLoginId().toString();
-        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<User> optionalUser = userService.findUserById(userId);
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
         }
@@ -169,10 +171,9 @@ public class UserController {
 
     @GetMapping("/userInfo")
     @SaCheckLogin
-    @Cacheable(value = "userInfo")
     public ResponseEntity<Object> getUserInfo() {
         String userId = StpUtil.getLoginId().toString();
-        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<User> optionalUser = userService.findUserById(userId);
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
         }
