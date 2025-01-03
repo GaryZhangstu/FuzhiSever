@@ -14,7 +14,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     //寻找用户通过id
-    @Cacheable(value = "userInfo")
+    @Cacheable(value = "userInfo", key = "#id")
     public Optional<User> findUserById(String id) {
         return userRepository.findById(id);
     }
