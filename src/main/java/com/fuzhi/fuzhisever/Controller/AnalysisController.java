@@ -46,7 +46,7 @@ public class AnalysisController {
 
     @PostMapping("/facialReport")
     @SaCheckLogin
-    @CacheEvict(value = { "history"}, key = "#userId")
+    @CacheEvict(value = { "history"}, keyGenerator = "customKeyGenerator")
     public ResponseEntity<Object> getFacialReport(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(SaResult.error("上传的文件不能为空"));
