@@ -1,4 +1,4 @@
-package com.fuzhi.fuzhisever.util;
+package com.fuzhi.fuzhisever.Util;
 
 import cn.dev33.satoken.stp.StpUtil;
 import org.jetbrains.annotations.NotNull;

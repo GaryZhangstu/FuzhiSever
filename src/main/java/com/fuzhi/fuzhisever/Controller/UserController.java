@@ -4,10 +4,12 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.fuzhi.fuzhisever.DTO.ApiResponse;
 import com.fuzhi.fuzhisever.DTO.RegisterRequestDTO;
 import com.fuzhi.fuzhisever.DTO.UserDTO;
+import com.fuzhi.fuzhisever.Exception.BusinessException;
+import com.fuzhi.fuzhisever.Exception.ErrorCode;
 import com.fuzhi.fuzhisever.Model.User;
 import com.fuzhi.fuzhisever.Repository.UserRepository;
 import com.fuzhi.fuzhisever.Service.CommunicationService;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -40,149 +43,106 @@ public class UserController {
     private final CommunicationService communicationService;
     private final UserService userService;
     @PostMapping("/doLogin")
-    public ResponseEntity<SaResult> doLogin(@RequestParam String email, @RequestParam String pwd) {
-
-
-        try {
-            User user = userRepository.findUserByEmail(email);
-            if (user == null) {
-                return ResponseEntity.status(401).body(SaResult.error("用户不存在"));
-            }
-            if (passwordService.checkPassword(pwd, user.getPwd())) {
-                StpUtil.login(user.getId());
-                SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-                return ResponseEntity.ok(SaResult.data(tokenInfo));
-            }
-            return ResponseEntity.status(401).body(SaResult.error("登录失败"));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(SaResult.error("登录过程中发生错误: " + e.getMessage()));
+    @SaIgnore
+    public ResponseEntity<ApiResponse<?>> doLogin(@RequestParam String email, @RequestParam String pwd) {
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }
+        if (!passwordService.checkPassword(pwd, user.getPwd())) {
+            throw new BusinessException(ErrorCode.WRONG_PASSWORD);
+        }
+
+        StpUtil.login(user.getId());
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        return ResponseEntity.ok(ApiResponse.success(tokenInfo));
     }
 
 
     @GetMapping("/isLogin")
     @SaIgnore
-    public ResponseEntity<SaResult> isLogin() {
-        try {
-            boolean isLoggedIn = StpUtil.isLogin();
-            return ResponseEntity.ok(SaResult.ok("是否登录：" + isLoggedIn));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(SaResult.error("Failed to check login status: " + e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<?>> isLogin() {
+        boolean isLoggedIn = StpUtil.isLogin();
+        return ResponseEntity.ok(ApiResponse.success(isLoggedIn));
     }
 
 
     @GetMapping("/tokenInfo")
     @SaCheckLogin
-    public ResponseEntity<SaResult> tokenInfo() {
-        try {
-            return ResponseEntity.ok(SaResult.data(StpUtil.getTokenInfo()));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(SaResult.error("Failed to get token info: " + e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<?>> tokenInfo() {
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        return ResponseEntity.ok(ApiResponse.success(tokenInfo));
     }
 
 
     @PostMapping("/logout")
     @SaCheckLogin
-    public ResponseEntity<SaResult> logout() {
-        try {
-            StpUtil.logout();
-            return ResponseEntity.ok(SaResult.ok());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(SaResult.error("Logout failed: " + e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<?>> logout() {
+        StpUtil.logout();
+        return ResponseEntity.ok(ApiResponse.success("登出成功"));
     }
 
     @PostMapping("/register")
     @SaIgnore
-    public ResponseEntity<SaResult> register(@Valid @RequestBody RegisterRequestDTO registerRequest) {
-
+    public ResponseEntity<ApiResponse<?>> register(@Valid @RequestBody RegisterRequestDTO registerRequest) {
         if (userRepository.findUserByEmail(registerRequest.getEmail()) != null) {
-            return new ResponseEntity<>(SaResult.error("用户已存在"), HttpStatus.BAD_REQUEST);
+            throw new BusinessException(ErrorCode.USER_ALREADY_EXISTS);
         }
 
-
-        User newUser = new User();
-        newUser.setEmail(registerRequest.getEmail());
+        User newUser = modelMapper.map(registerRequest, User.class);
         newUser.setPwd(passwordService.hashPassword(registerRequest.getPwd()));
-        newUser.setGender(registerRequest.getGender());
-        newUser.setPhoneNumber(registerRequest.getPhoneNumber());
-        newUser.setName(registerRequest.getName());
-        newUser.setAge(registerRequest.getAge());
-
-
         userRepository.save(newUser);
 
-        return new ResponseEntity<>(SaResult.ok("注册成功"), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("注册成功"));
     }
 
 
     @PostMapping("/uploadAvatar")
     @SaCheckLogin
-    public ResponseEntity<SaResult> uploadAvatar(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ApiResponse<?>> uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(SaResult.error("上传的文件不能为空"));
+            throw new BusinessException(ErrorCode.FILE_EMPTY);
         }
 
-        try {
-            String userId = StpUtil.getLoginId().toString();
-            Optional<User> optionalUser = userService.findUserById(userId);
-            if (optionalUser.isEmpty()) {
-                return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
-            }
+        String userId = StpUtil.getLoginId().toString();
+        User user = userService.findUserById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-            User user = optionalUser.get();
-            UUID uuid = UUID.randomUUID();
+        UUID uuid = UUID.randomUUID();
+        String key = "avatar/" + userId + "/" + uuid + file.getOriginalFilename();
 
-            String key ="avatar/" + userId + "/" + uuid+file.getOriginalFilename();
+        communicationService.uploadFileToS3(file.getInputStream(), key);
+        user.setAvatar(key);
+        userRepository.save(user);
 
-            communicationService.uploadFileToS3(file.getInputStream(), key);
-            user.setAvatar(key);
-
-
-            userRepository.save(user);
-            return ResponseEntity.ok(SaResult.ok("头像上传成功"));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(SaResult.error("文件上传失败: " + e.getMessage()));
-        }
+        return ResponseEntity.ok(ApiResponse.success("头像上传成功"));
     }
 
     @PutMapping("/updatePassword")
     @SaCheckLogin
-    public ResponseEntity<SaResult> updatePassword(@RequestParam String oldPwd,@RequestParam String Pwd) {
+    public ResponseEntity<ApiResponse<?>> updatePassword(@RequestParam String oldPwd, @RequestParam String newPwd) {
         String userId = StpUtil.getLoginId().toString();
-        Optional<User> optionalUser = userService.findUserById(userId);
-        if (optionalUser.isEmpty()) {
-            return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
-        }
+        User user = userService.findUserById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        User user = optionalUser.get();
         if (!passwordService.checkPassword(oldPwd, user.getPwd())) {
-            return new ResponseEntity<>(SaResult.error("当前密码不正确"), HttpStatus.BAD_REQUEST);
+            throw new BusinessException(ErrorCode.WRONG_PASSWORD);
         }
 
-        user.setPwd(passwordService.hashPassword(Pwd));
-
+        user.setPwd(passwordService.hashPassword(newPwd));
         userRepository.save(user);
 
-        return ResponseEntity.ok(SaResult.ok("密码更新成功"));
+        return ResponseEntity.ok(ApiResponse.success("密码更新成功"));
     }
 
     @GetMapping("/userInfo")
     @SaCheckLogin
-    public ResponseEntity<Object> getUserInfo() {
+    public ResponseEntity<ApiResponse<?>> getUserInfo() {
         String userId = StpUtil.getLoginId().toString();
-        Optional<User> optionalUser = userService.findUserById(userId);
-        if (optionalUser.isEmpty()) {
-            return new ResponseEntity<>(SaResult.error("用户不存在"), HttpStatus.NOT_FOUND);
-        }
-
-        User user = optionalUser.get();
+        User user = userService.findUserById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-
-
-        return ResponseEntity.ok(userDTO);
+        return ResponseEntity.ok(ApiResponse.success(userDTO));
     }
 }
