@@ -12,6 +12,6 @@ public class PasswordService {
 
     public boolean checkPassword(String plainTextPassword, String hashedPassword) {
         // 验证密码
-        return BCrypt.checkpw(plainTextPassword, hashedPassword);
+        return !BCrypt.checkpw(plainTextPassword, hashedPassword);
     }
 }
