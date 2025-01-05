@@ -44,13 +44,13 @@ public class UserController {
     private final UserService userService;
     @PostMapping("/doLogin")
     @SaIgnore
-    public ResponseEntity<ApiResponse<?>> doLogin(@RequestParam String email, @RequestParam String pwd) {
+    public ResponseEntity<ApiResponse<SaTokenInfo>> doLogin(@RequestParam String email, @RequestParam String pwd) {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
-            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
+            throw new BusinessException(ErrorCode.USERNAME_OR_PASSWORD_ERROR);
         }
         if (!passwordService.checkPassword(pwd, user.getPwd())) {
-            throw new BusinessException(ErrorCode.WRONG_PASSWORD);
+            throw new BusinessException(ErrorCode.USERNAME_OR_PASSWORD_ERROR);
         }
 
         StpUtil.login(user.getId());
@@ -61,7 +61,7 @@ public class UserController {
 
     @GetMapping("/isLogin")
     @SaIgnore
-    public ResponseEntity<ApiResponse<?>> isLogin() {
+    public ResponseEntity<ApiResponse<Boolean>> isLogin() {
         boolean isLoggedIn = StpUtil.isLogin();
         return ResponseEntity.ok(ApiResponse.success(isLoggedIn));
     }
@@ -69,7 +69,7 @@ public class UserController {
 
     @GetMapping("/tokenInfo")
     @SaCheckLogin
-    public ResponseEntity<ApiResponse<?>> tokenInfo() {
+    public ResponseEntity<ApiResponse<SaTokenInfo>> tokenInfo() {
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         return ResponseEntity.ok(ApiResponse.success(tokenInfo));
     }
@@ -77,14 +77,14 @@ public class UserController {
 
     @PostMapping("/logout")
     @SaCheckLogin
-    public ResponseEntity<ApiResponse<?>> logout() {
+    public ResponseEntity<ApiResponse<String>> logout() {
         StpUtil.logout();
         return ResponseEntity.ok(ApiResponse.success("登出成功"));
     }
 
     @PostMapping("/register")
     @SaIgnore
-    public ResponseEntity<ApiResponse<?>> register(@Valid @RequestBody RegisterRequestDTO registerRequest) {
+    public ResponseEntity<ApiResponse<String>> register(@Valid @RequestBody RegisterRequestDTO registerRequest) {
         if (userRepository.findUserByEmail(registerRequest.getEmail()) != null) {
             throw new BusinessException(ErrorCode.USER_ALREADY_EXISTS);
         }
@@ -99,7 +99,7 @@ public class UserController {
 
     @PostMapping("/uploadAvatar")
     @SaCheckLogin
-    public ResponseEntity<ApiResponse<?>> uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<ApiResponse<String>> uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new BusinessException(ErrorCode.FILE_EMPTY);
         }
@@ -120,7 +120,7 @@ public class UserController {
 
     @PutMapping("/updatePassword")
     @SaCheckLogin
-    public ResponseEntity<ApiResponse<?>> updatePassword(@RequestParam String oldPwd, @RequestParam String newPwd) {
+    public ResponseEntity<ApiResponse<String>> updatePassword(@RequestParam String oldPwd, @RequestParam String newPwd) {
         String userId = StpUtil.getLoginId().toString();
         User user = userService.findUserById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -137,7 +137,7 @@ public class UserController {
 
     @GetMapping("/userInfo")
     @SaCheckLogin
-    public ResponseEntity<ApiResponse<?>> getUserInfo() {
+    public ResponseEntity<ApiResponse<UserDTO>> getUserInfo() {
         String userId = StpUtil.getLoginId().toString();
         User user = userService.findUserById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));

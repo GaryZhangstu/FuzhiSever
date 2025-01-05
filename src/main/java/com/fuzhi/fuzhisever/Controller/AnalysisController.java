@@ -41,7 +41,7 @@ public class AnalysisController {
     @PostMapping("/facialReport")
     @SaCheckLogin
     @CacheEvict(value = { "history"}, keyGenerator = "customKeyGenerator")
-    public ResponseEntity<ApiResponse<?>> getFacialReport(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseEntity<ApiResponse<SkinAnalysis>> getFacialReport(@RequestParam("file") MultipartFile file) throws Exception {
         if (file.isEmpty()) {
             throw new BusinessException(ErrorCode.FILE_EMPTY);
         }
@@ -52,7 +52,7 @@ public class AnalysisController {
 
         communicationService.uploadFileToS3(file.getInputStream(), key);
         Object result = communicationService.getFacialReport(file);
-        Object analysisResult = skinAnalysisService.saveSkinAnalysisData(result, key, userId);
+        SkinAnalysis analysisResult = skinAnalysisService.saveSkinAnalysisData(result, key, userId);
 
         return ResponseEntity.ok(ApiResponse.success(analysisResult));
     }
@@ -60,7 +60,7 @@ public class AnalysisController {
 
     @GetMapping("/getSkinAnalysisHistory")
     @SaCheckLogin
-    public ResponseEntity<ApiResponse<?>> getSkinAnalysisHistory() {
+    public ResponseEntity<ApiResponse<List<History>>> getSkinAnalysisHistory() {
         String userId = StpUtil.getLoginId().toString();
         List<History> historyList = historyService.findAllByUserIdOrderByTimeStamp(userId);
         return ResponseEntity.ok(ApiResponse.success(historyList));
@@ -68,7 +68,7 @@ public class AnalysisController {
 
     @GetMapping("/getSkinAnalysisReport")
     @SaCheckLogin
-    public ResponseEntity<ApiResponse<?>> getSkinAnalysis(@RequestParam String Id) {
+    public ResponseEntity<ApiResponse<SkinAnalysis>> getSkinAnalysis(@RequestParam String Id) {
         SkinAnalysis skinAnalysis = skinAnalysisRepository.findById(Id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SKIN_ANALYSIS_NOT_FOUND));
         return ResponseEntity.ok(ApiResponse.success(skinAnalysis));

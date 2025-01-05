@@ -16,86 +16,63 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
-import java.util.Map;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<?>> handleBusinessException(BusinessException ex) {
         ApiResponse<?> response = ApiResponse.error(ex.getCode(), ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getHttpStatus()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleException(Exception ex) {
-        ApiResponse<?> response = ApiResponse.error(ErrorCode.INTERNAL_SERVER_ERROR);
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return ApiResponse.buildErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<?>> handleValidationExceptions(MethodArgumentNotValidException ex) {
 
 
 
-        return new ResponseEntity<>(
-                ApiResponse.error(ErrorCode.INVALID_PARAMETER),
-                HttpStatus.BAD_REQUEST
-        );
+        return ApiResponse.buildErrorResponse(ErrorCode.INVALID_PARAMETER);
     }
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse<?>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
 
 
-        return new ResponseEntity<>(
-                ApiResponse.error(ErrorCode.INVALID_PARAMETER),
-                HttpStatus.BAD_REQUEST
-        );
+        return ApiResponse.buildErrorResponse(ErrorCode.INVALID_PARAMETER);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse<?>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
 
 
-        return new ResponseEntity<>(
-                ApiResponse.error(ErrorCode.INVALID_PARAMETER),
-                HttpStatus.BAD_REQUEST
-        );
+        return ApiResponse.buildErrorResponse(ErrorCode.INVALID_PARAMETER);
     }
     @ExceptionHandler(NotLoginException.class)
     public ResponseEntity<ApiResponse<?>> handleNotLoginException(NotLoginException e) {
-        return new ResponseEntity<>(
-                ApiResponse.error(ErrorCode.USER_NOT_LOGIN),
-                HttpStatus.UNAUTHORIZED
-        );
+        return ApiResponse.buildErrorResponse(ErrorCode.USER_NOT_LOGIN);
     }
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ApiResponse<?>> handleIOException(IOException ex) {
 
 
-        return new ResponseEntity<>(
-                ApiResponse.error(ErrorCode.FILE_UPLOAD_FAILED),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+        return ApiResponse.buildErrorResponse(ErrorCode.FILE_READ_ERROR);
     }
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<?>> handleAccessDeniedException(AccessDeniedException ex) {
 
 
-        return new ResponseEntity<>(
-                ApiResponse.error(ErrorCode.PERMISSION_DENIED),
-                HttpStatus.FORBIDDEN
-        );
+        return ApiResponse.buildErrorResponse(ErrorCode.FILE_READ_ERROR);
     }
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiResponse<?>> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
 
 
-        return new ResponseEntity<>(
-                ApiResponse.error(ErrorCode.FILE_SIZE_EXCEEDED),
-                HttpStatus.BAD_REQUEST
-        );
+        return ApiResponse.buildErrorResponse(ErrorCode.FILE_SIZE_EXCEEDED);
     }
 
 }
