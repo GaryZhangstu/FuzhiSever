@@ -2,8 +2,6 @@ package com.fuzhi.fuzhisever.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.*;
 import org.apache.commons.io.FilenameUtils;
@@ -11,22 +9,15 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.S3Client;
-
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
-import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.Objects;
-
 
 
 @Service
@@ -36,9 +27,8 @@ public class CommunicationService {
     private final OkHttpClient okHttpClient;
     private final ObjectMapper objectMapper;
     private final S3Client s3Client;
-    private String bucketName;
     private final Tika tika;
-
+    private String bucketName;
     @Value("${facialAnalysis.api_key}")
     private String api_key;
 

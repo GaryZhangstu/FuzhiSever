@@ -1,13 +1,11 @@
 package com.fuzhi.fuzhisever.Exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
-
 import com.fuzhi.fuzhisever.DTO.ApiResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +15,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-
 
 
 @RestControllerAdvice
@@ -78,6 +75,7 @@ public class GlobalExceptionHandler {
         log.error("MaxUploadSizeExceededException occurred: {}", ex.getMessage(), ex);
         return ApiResponse.buildErrorResponse(ErrorCode.FILE_SIZE_EXCEEDED);
     }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiResponse<?>> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
         log.error("MissingServletRequestParameterException occurred: {}", ex.getMessage(), ex);

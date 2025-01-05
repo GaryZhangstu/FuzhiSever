@@ -5,13 +5,11 @@ import com.fuzhi.fuzhisever.Model.History;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
 import com.fuzhi.fuzhisever.Repository.HistoryRepository;
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.util.Map;
 
 
@@ -29,7 +27,7 @@ public class SkinAnalysisService {
     private final HistoryRepository historyRepository;
 
     @Transactional
-    public SkinAnalysis saveSkinAnalysisData(Object jsonObject, String imageKey, String userId) throws Exception {
+    public SkinAnalysis saveSkinAnalysisData(Object jsonObject, String imageKey, String userId) {
         if (objectMapper == null) {
             throw new IllegalStateException("ObjectMapper is not properly injected");
         }

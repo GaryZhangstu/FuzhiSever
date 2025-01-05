@@ -1,13 +1,10 @@
 package com.fuzhi.fuzhisever.DTO;
 
 import com.fuzhi.fuzhisever.Exception.ErrorCode;
-import lombok.Data;
-
-import org.springframework.http.HttpStatus;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
@@ -74,9 +71,11 @@ public class ApiResponse<T> {
                 .data(null)
                 .build();
     }
+
     public static ResponseEntity<ApiResponse<?>> buildErrorResponse(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.error(errorCode));
     }
+
     // 分页信息类
     @Data
     @AllArgsConstructor

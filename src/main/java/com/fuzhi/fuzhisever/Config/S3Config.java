@@ -36,6 +36,7 @@ public class S3Config {
                 .endpointOverride(URI.create(endpoint))
                 .build();
     }
+
     @Bean
     public String bucketName() {
         return bucketName;

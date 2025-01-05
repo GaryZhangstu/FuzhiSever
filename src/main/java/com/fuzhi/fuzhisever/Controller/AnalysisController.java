@@ -2,32 +2,24 @@ package com.fuzhi.fuzhisever.Controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-
 import com.fuzhi.fuzhisever.DTO.ApiResponse;
-
 import com.fuzhi.fuzhisever.Exception.BusinessException;
 import com.fuzhi.fuzhisever.Exception.ErrorCode;
 import com.fuzhi.fuzhisever.Model.History;
 import com.fuzhi.fuzhisever.Model.SkinAnalysis;
-
 import com.fuzhi.fuzhisever.Repository.SkinAnalysisRepository;
-
 import com.fuzhi.fuzhisever.Service.CommunicationService;
 import com.fuzhi.fuzhisever.Service.HistoryService;
 import com.fuzhi.fuzhisever.Service.SkinAnalysisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheEvict;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.util.List;
-
 import java.util.UUID;
-
 
 
 @RestController
@@ -42,7 +34,7 @@ public class AnalysisController {
 
     @PostMapping("/facialReport")
     @SaCheckLogin
-    @CacheEvict(value = { "history" }, keyGenerator = "customKeyGenerator")
+    @CacheEvict(value = {"history"}, keyGenerator = "customKeyGenerator")
     public ResponseEntity<ApiResponse<SkinAnalysis>> getFacialReport(@RequestParam("file") MultipartFile file) throws Exception {
         log.info("Received request to get facial report with file: {}", file.getOriginalFilename());
 

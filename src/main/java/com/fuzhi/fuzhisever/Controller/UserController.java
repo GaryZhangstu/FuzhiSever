@@ -4,7 +4,6 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-
 import com.fuzhi.fuzhisever.DTO.ApiResponse;
 import com.fuzhi.fuzhisever.DTO.RegisterRequestDTO;
 import com.fuzhi.fuzhisever.DTO.UserDTO;
