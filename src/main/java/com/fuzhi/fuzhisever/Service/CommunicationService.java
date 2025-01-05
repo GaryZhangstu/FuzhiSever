@@ -3,6 +3,7 @@ package com.fuzhi.fuzhisever.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.*;
 import org.apache.commons.io.FilenameUtils;
@@ -29,13 +30,14 @@ import java.util.Objects;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Log4j2
 public class CommunicationService {
     private final OkHttpClient okHttpClient;
     private final ObjectMapper objectMapper;
     private final S3Client s3Client;
     private String bucketName;
+    private final Tika tika;
 
     @Value("${facialAnalysis.api_key}")
     private String api_key;
@@ -57,7 +59,7 @@ public class CommunicationService {
             throw new IllegalArgumentException("File extension is missing");
         }
 
-        Tika tika = new Tika();
+
         String mimeType = tika.detect(image_file.getInputStream());
         MediaType mediaType = MediaType.parse(mimeType);
         if (mediaType == null || !mimeType.startsWith("image/")) {
@@ -95,7 +97,7 @@ public class CommunicationService {
         log.info("Checking if bucket exists: {}", bucketName);
         if (!bucketExists(bucketName)) {
             log.warn("Bucket {} does not exist", bucketName);
-            // Handle bucket creation or other logic as needed
+
         }
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
