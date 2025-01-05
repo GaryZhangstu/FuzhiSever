@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -76,5 +77,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         log.error("MaxUploadSizeExceededException occurred: {}", ex.getMessage(), ex);
         return ApiResponse.buildErrorResponse(ErrorCode.FILE_SIZE_EXCEEDED);
+    }
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse<?>> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        log.error("MissingServletRequestParameterException occurred: {}", ex.getMessage(), ex);
+        return ApiResponse.buildErrorResponse(ErrorCode.INVALID_PARAMETER);
     }
 }

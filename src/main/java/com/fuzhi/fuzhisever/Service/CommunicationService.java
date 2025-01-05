@@ -30,7 +30,7 @@ import java.util.Objects;
 
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Log4j2
 public class CommunicationService {
     private final OkHttpClient okHttpClient;
