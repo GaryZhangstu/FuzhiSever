@@ -73,7 +73,7 @@ public class SkinAnalysisService {
 
             Object scoreInfo = savedSkinAnalysis.getResult().get(SCORE_INFO_KEY);
             if (scoreInfo != null) {
-                history.setScore(scoreInfo.toString());
+                history.setScore(scoreInfo);
             } else {
                 log.warn("Score info is null for SkinAnalysis ID: {}", savedSkinAnalysis.getId());
             }
