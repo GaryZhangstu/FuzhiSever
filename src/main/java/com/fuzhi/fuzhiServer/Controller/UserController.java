@@ -95,7 +95,7 @@ public class UserController {
 
         User newUser = modelMapper.map(registerRequest, User.class);
         newUser.setPwd(passwordService.hashPassword(registerRequest.getPwd()));
-        userRepository.save(newUser);
+        userService.saveUser(newUser);
         log.info("User registered successfully, email: {}", registerRequest.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("注册成功"));
@@ -112,18 +112,15 @@ public class UserController {
         }
 
         String userId = StpUtil.getLoginId().toString();
-        User user = userService.findUserById(userId)
-                .orElseThrow(() -> {
-                    log.error("User not found for ID: {}", userId);
-                    return new BusinessException(ErrorCode.USER_NOT_FOUND);
-                });
+        User user = userService.findUserById(userId);
+
 
         UUID uuid = UUID.randomUUID();
         String key = "avatar/" + userId + "/" + uuid + file.getOriginalFilename();
 
         communicationService.uploadFileToS3(file.getInputStream(), key);
         user.setAvatar(key);
-        userRepository.save(user);
+        userService.saveUser(user);
         log.info("Avatar uploaded successfully for user ID: {}", userId);
 
         return ResponseEntity.ok(ApiResponse.success("头像上传成功"));
@@ -135,11 +132,8 @@ public class UserController {
         log.info("Received password update request");
 
         String userId = StpUtil.getLoginId().toString();
-        User user = userService.findUserById(userId)
-                .orElseThrow(() -> {
-                    log.error("User not found for ID: {}", userId);
-                    return new BusinessException(ErrorCode.USER_NOT_FOUND);
-                });
+        User user = userService.findUserById(userId);
+
 
         if (passwordService.checkPassword(oldPwd, user.getPwd())) {
             log.error("Password mismatch for user ID: {}", userId);
@@ -147,7 +141,7 @@ public class UserController {
         }
 
         user.setPwd(passwordService.hashPassword(newPwd));
-        userRepository.save(user);
+        userService.saveUser(user);
         log.info("Password updated successfully for user ID: {}", userId);
 
         return ResponseEntity.ok(ApiResponse.success("密码更新成功"));
@@ -159,15 +153,30 @@ public class UserController {
         log.info("Received request to get user info");
 
         String userId = StpUtil.getLoginId().toString();
-        User user = userService.findUserById(userId)
-                .orElseThrow(() -> {
-                    log.error("User not found for ID: {}", userId);
-                    return new BusinessException(ErrorCode.USER_NOT_FOUND);
-                });
+        User user = userService.findUserById(userId);
 
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         log.info("Returning user info: {}", userDTO);
         return ResponseEntity.ok(ApiResponse.success(userDTO));
     }
+
+    //更新用户信息
+    @PutMapping("/updateUserInfo")
+    @SaCheckLogin
+    public ResponseEntity<ApiResponse<String>> updateUserInfo(@RequestBody UserDTO userDTO) {
+        log.info("Received request to update user info: {}", userDTO);
+        String userId = StpUtil.getLoginId().toString();
+        User user = userService.findUserById(userId);
+        user.setName(userDTO.getName());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setEmail(userDTO.getEmail());
+        user.setAge(userDTO.getAge());
+        user.setGender(userDTO.getGender());
+
+        userService.saveUser(user);
+        log.info("User info updated successfully for user ID: {}", userId);
+        return ResponseEntity.ok(ApiResponse.success("用户信息更新成功"));
+    }
+
 }
 
