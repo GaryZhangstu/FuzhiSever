@@ -136,7 +136,7 @@ public class UserController {
 
 
         if (passwordService.checkPassword(oldPwd, user.getPwd())) {
-            log.error("Password mismatch for user ID: {}", userId);
+            log.info("Password mismatch for user ID: {}", userId);
             throw new BusinessException(ErrorCode.WRONG_PASSWORD);
         }
 

@@ -13,4 +13,4 @@ EXPOSE 8080
 
 
 # 运行应用程序
-ENTRYPOINT ["java", "-jar", "application.jar"]
+ENTRYPOINT ["java", "-jar", "application.jar","-Dspring.profiles.active=prod"]
