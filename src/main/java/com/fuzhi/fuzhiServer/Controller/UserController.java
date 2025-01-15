@@ -45,11 +45,11 @@ public class UserController {
 
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
-            log.error("User not found for email: {}", email);
+            log.warn("User not found for email: {}", email);
             throw new BusinessException(ErrorCode.USERNAME_OR_PASSWORD_ERROR);
         }
-        if (passwordService.checkPassword(pwd, user.getPwd())) {
-            log.error("Password mismatch for email: {}", email);
+        if (!passwordService.checkPassword(pwd, user.getPwd())) {
+            log.warn("Password mismatch for email: {}", email);
             throw new BusinessException(ErrorCode.USERNAME_OR_PASSWORD_ERROR);
         }
 
@@ -135,7 +135,7 @@ public class UserController {
         User user = userService.findUserById(userId);
 
 
-        if (passwordService.checkPassword(oldPwd, user.getPwd())) {
+        if (!passwordService.checkPassword(oldPwd, user.getPwd())) {
             log.info("Password mismatch for user ID: {}", userId);
             throw new BusinessException(ErrorCode.WRONG_PASSWORD);
         }

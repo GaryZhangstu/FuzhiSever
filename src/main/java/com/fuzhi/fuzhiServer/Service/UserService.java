@@ -18,7 +18,15 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    //寻找用户通过id
+    /**
+     * 根据用户ID查找用户信息。
+     * 该方法会尝试从缓存中获取用户信息，如果缓存中不存在，则从数据库中查找。
+     * 如果用户未找到，会记录错误日志并抛出自定义业务异常。
+     *
+     * @param userId 用户的唯一标识符
+     * @return 找到的 User 对象
+     * @throws BusinessException 如果用户未找到，抛出此异常
+     */
     @Cacheable(value = "userInfo", key = "#userId")
     public User findUserById(String userId) {
     // 尝试从数据库中查找用户
@@ -29,12 +37,17 @@ public class UserService {
             // 抛出自定义业务异常
             return new BusinessException(ErrorCode.USER_NOT_FOUND);
         });
-}
+    }
 
 
-    //更新用户信息
+    /**
+     * 保存或更新用户信息。
+     * 该方法会将用户信息保存到数据库中，并清除相应的缓存。
+     *
+     * @param user 要保存或更新的 User 对象
+     */
     @CacheEvict(value = "userInfo", key = "#user.id")
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 }
