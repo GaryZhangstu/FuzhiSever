@@ -68,6 +68,8 @@ public class CommunicationService {
             assert responseBody != null;
 
             return objectMapper.readValue(responseBody.string(), Object.class);
+        } catch (IOException e) {
+            throw new IOException("Error occurred while getting facial report: " + e.getMessage(), e);
         }
     }
 
