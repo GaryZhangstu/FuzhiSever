@@ -33,3 +33,6 @@ build/
 .vscode/
 
 src/main/resources/application.yml
+/log/error.log
+/log/info.log
+/log/warn.log
